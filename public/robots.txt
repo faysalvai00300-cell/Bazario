@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /199/admin-smartlookbd-access/
+Disallow: /admin-smartlookbd/
+Disallow: /admin/
+Disallow: /login/
+
+Disallow: /account/
+Disallow: /cart
+Disallow: /checkout
+Allow: /
+Sitemap: https://smartlookbd.com/sitemap.xml
