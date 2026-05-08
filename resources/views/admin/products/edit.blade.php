@@ -32,7 +32,7 @@
             selectedCategoryId: '{{ $product->category_id }}',
             selectedCategoryPage: '{{ $product->category?->target_page ?? '' }}',
             featuredCounts: {{ json_encode($featuredCounts) }},
-            limits: { '1': 14, '2': 8, '3': 8, '4': 14, '5': 14 },
+            limits: { '1': 14, '2': 14, '3': 14, '4': 20, '5': 20 },
             isOriginalFeatured: {{ $product->is_featured ? 'true' : 'false' }},
             originalCategoryId: '{{ $product->category_id }}',
             get currentCount() { return this.featuredCounts[this.selectedCategoryId] || 0 },

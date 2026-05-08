@@ -49,21 +49,24 @@ class AuthController extends Controller
 
         $credentials = [$field => $value, 'password' => $request->password];
 
-        $userExists = User::where($field, $value)->exists();
-        if (!$userExists) {
+        $user = User::where($field, $value)->first();
+        if (!$user) {
             return back()->withErrors([$field => "No account found with this {$field}."])->withInput();
         }
 
+        if ($user->role === 'admin') {
+            return back()->withErrors([$field => 'Admin accounts must login through the admin portal.'])->withInput();
+        }
+
         if (Auth::attempt($credentials, $request->has('remember'))) {
-            $request->session()->regenerate();
             $user = Auth::user();
+            $request->session()->regenerate();
             $user->update(['last_ip' => $request->ip()]);
 
             // Link guest orders
             if ($user->email) Order::where('email', $user->email)->whereNull('user_id')->update(['user_id' => $user->id]);
             if ($user->phone) Order::where('phone', $user->phone)->whereNull('user_id')->update(['user_id' => $user->id]);
 
-            if ($user->role === 'admin') return redirect()->route('admin.dashboard');
             return redirect()->intended(route('home'));
         }
 
@@ -261,12 +264,12 @@ class AuthController extends Controller
             elseif (str_starts_with($identity, '88')) $identity = substr($identity, 2);
             if (strlen($identity) === 10) $identity = '0' . $identity;
 
-            $user = User::where('phone', $identity)->first();
+            $user = User::where('phone', $identity)->where('role', '!=', 'admin')->first();
             if (!$user) return back()->withErrors(['phone' => 'We cannot find a user with that phone number.'])->withInput();
         } else {
             $request->validate(['email' => 'required|email']);
             $identity = $request->email;
-            $user = User::where('email', $identity)->first();
+            $user = User::where('email', $identity)->where('role', '!=', 'admin')->first();
             if (!$user) return back()->withErrors(['email' => 'We cannot find a user with that email address.'])->withInput();
         }
 
@@ -319,7 +322,7 @@ class AuthController extends Controller
         $identity = session('password_reset_verified_identity');
         $type = session('otp_type');
 
-        $user = User::where($type === 'phone' ? 'phone' : 'email', $identity)->first();
+        $user = User::where($type === 'phone' ? 'phone' : 'email', $identity)->where('role', '!=', 'admin')->first();
         
         if ($user) {
             $user->update(['password' => Hash::make($request->password)]);
@@ -358,7 +361,9 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'Invalid token!']);
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $request->email)->where('role', '!=', 'admin')->first();
+        if (!$user) return back()->withErrors(['email' => 'Unauthorized access.']);
+
         $user->update(['password' => Hash::make($request->password)]);
 
         \DB::table('password_reset_tokens')->where(['email'=> $request->email])->delete();

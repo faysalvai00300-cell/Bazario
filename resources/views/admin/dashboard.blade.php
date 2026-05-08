@@ -2,6 +2,17 @@
 @section('title', 'SmartLookBD Dashboard')
 
 @section('content')
+<style>
+    @keyframes chartSpin {
+        0% { transform: rotate(-360deg) scale(0); opacity: 0; }
+        70% { transform: rotate(20deg) scale(1.1); opacity: 1; }
+        100% { transform: rotate(0deg) scale(1); opacity: 1; }
+    }
+    .animate-chart-spin {
+        animation: chartSpin 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        transform-origin: center center;
+    }
+</style>
 
 <!-- Header -->
 <div class="mb-6">
@@ -48,7 +59,7 @@
         <h3 class="font-bold text-dark-custom text-[14px] mb-8">Sales By Category</h3>
         <div class="relative flex-1 w-full flex items-center justify-center min-h-[220px]">
             <div class="w-full max-w-[200px] h-[200px] relative">
-                <canvas id="categoryChart"></canvas>
+                <canvas id="categoryChart" class="animate-chart-spin"></canvas>
                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none mt-2">
                     <span class="text-gray-400 text-[10px] mb-0.5">Total Sales</span>
                     <span class="text-gray-700 font-bold text-xs">৳ {{ number_format($stats['total_sales'] ?? 0) }}</span>

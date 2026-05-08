@@ -3,6 +3,20 @@
 @section('body_bg', '#f9fafb')
 @section('content')
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 bg-[#f9fafb]" x-data="checkoutData">
+        <style>
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                50% { transform: translateX(5px); }
+                75% { transform: translateX(-5px); }
+            }
+            .animate-shake {
+                animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+                border-color: #ff0000 !important;
+                box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.2) !important;
+                background-color: #fff1f1 !important;
+            }
+        </style>
 
         <p class="text-center text-sm text-gray-500 mb-4">Enter your information to order</p>
 
@@ -66,7 +80,8 @@
                             <div>
                                 <label class="text-sm font-medium text-gray-700 mb-1.5 block">Division *</label>
                                 <select name="division" x-model="division" @change="district = ''; thana = ''" required
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none bg-white">
+                                    :class="{'animate-shake': shakeDivision}"
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none bg-white transition-all duration-300">
                                     <option value="">--- Select Division ---</option>
                                     <template x-for="(districts, div) in locations" :key="div">
                                         <option :value="div" x-text="div"></option>
@@ -75,11 +90,13 @@
                             </div>
 
                             <!-- District -->
-                            <div>
+                            <div class="relative">
+                                <div x-show="!division" @click="triggerDivisionShake()" class="absolute inset-0 z-10 cursor-pointer"></div>
                                 <label class="text-sm font-medium text-gray-700 mb-1.5 block">District *</label>
                                 <select name="district" x-model="district" @change="thana = ''" required
                                     :disabled="!division"
-                                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none bg-white disabled:bg-gray-50">
+                                    :class="{'animate-shake': shakeDistrict}"
+                                    class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none bg-white disabled:bg-gray-50 transition-all duration-300">
                                     <option value="">--- Select District ---</option>
                                     <template x-if="division">
                                         <template x-for="(thanas, dist) in locations[division]" :key="dist">
@@ -90,7 +107,8 @@
                             </div>
 
                             <!-- Thana/Upazila -->
-                            <div>
+                            <div class="relative">
+                                <div x-show="!district" @click="!division ? triggerDivisionShake() : triggerDistrictShake()" class="absolute inset-0 z-10 cursor-pointer"></div>
                                 <label class="text-sm font-medium text-gray-700 mb-1.5 block">Thana / Upazila *</label>
                                 <select name="thana" x-model="thana" required :disabled="!district"
                                     class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-green-400 focus:outline-none bg-white disabled:bg-gray-50">
@@ -323,6 +341,16 @@
                 deliveryAreas: {!! $deliveryAreas->toJson() !!},
                 saveAddress: true,
                 hasSavedAddress: false,
+                shakeDivision: false,
+                shakeDistrict: false,
+                triggerDivisionShake() {
+                    this.shakeDivision = true;
+                    setTimeout(() => { this.shakeDivision = false; }, 400);
+                },
+                triggerDistrictShake() {
+                    this.shakeDistrict = true;
+                    setTimeout(() => { this.shakeDistrict = false; }, 400);
+                },
 
                 init() {
                     this.updateTotals();

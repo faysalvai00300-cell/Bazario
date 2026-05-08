@@ -554,8 +554,8 @@
 
     <!-- Global Image Modal -->
     <div x-data x-show="$store.imageModal.show" 
-         class="fixed inset-0 z-[5000] flex items-center justify-center p-4"
-         style="background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);"
+         class="fixed inset-0 flex items-center justify-center p-4"
+         style="background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999;"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"

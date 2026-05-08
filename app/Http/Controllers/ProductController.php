@@ -97,7 +97,7 @@ class ProductController extends Controller
                 $query->latest();
                 break;
             default:
-                $query->latest();
+                $query->inRandomOrder();
         }
 
         $products = $query->get();
@@ -112,7 +112,7 @@ class ProductController extends Controller
             }
         }
         
-        $maxPrice = 30000;
+        $maxPrice = 10000;
         $minPrice = 0;
         
         if ($request->filled('q')) {
@@ -211,8 +211,8 @@ class ProductController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        $products = $query->latest()->get();
-        $maxPrice = 30000;
+        $products = $query->inRandomOrder()->get();
+        $maxPrice = 10000;
         $minPrice = 0;
         $categories = Category::where('is_active', true)->withCount(['products' => function($q) { $q->where('is_active', true); }])->orderBy('sort_order')->get();
         
@@ -260,7 +260,7 @@ class ProductController extends Controller
             ->latest()
             ->get();
 
-        $maxPrice = 30000;
+        $maxPrice = 10000;
         $minPrice = 0;
 
         $categories = Category::where('is_active', true)->withCount(['products' => function($q) { $q->where('is_active', true); }])->orderBy('sort_order')->get();

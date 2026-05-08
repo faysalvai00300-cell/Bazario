@@ -15,8 +15,8 @@ class AdminAuthController extends Controller
 {
     public function loginForm()
     {
-        // If already logged in as admin via env
-        if (session('admin_authenticated')) {
+        // If already logged in as admin via guard
+        if (Auth::guard('admin')->check()) {
             return redirect()->route('admin.dashboard');
         }
         
@@ -43,15 +43,18 @@ class AdminAuthController extends Controller
         $credentials = $request->only('email', 'password');
         \Log::info('Admin Login Attempt', ['email' => $credentials['email']]);
         
-        if (Auth::attempt($credentials)) {
-            \Log::info('Auth::attempt Success', ['email' => $credentials['email']]);
-            if (auth()->user()->role === 'admin') {
+        if (Auth::guard('admin')->attempt($credentials)) {
+            \Log::info('Auth::guard(admin)->attempt Success', ['email' => $credentials['email']]);
+            $user = Auth::guard('admin')->user();
+            
+            if ($user->role === 'admin') {
                 RateLimiter::clear($throttleKey);
-                session(['admin_authenticated' => true]);
+                session(['admin_authenticated' => true]); // Keeping for middleware compatibility
                 return redirect()->route('admin.dashboard')->with('success', 'Admin login successful.');
             }
-            \Log::warning('User is not admin', ['email' => $credentials['email'], 'role' => auth()->user()->role]);
-            Auth::logout();
+            
+            \Log::warning('User is not admin', ['email' => $credentials['email'], 'role' => $user->role]);
+            Auth::guard('admin')->logout();
             return back()->withErrors(['email' => 'You are not authorized as an admin.']);
         }
 
@@ -60,16 +63,12 @@ class AdminAuthController extends Controller
         // Increment failed attempts
         RateLimiter::hit($throttleKey, 60);
 
-        return back()->withErrors(['email' => 'INVALID_CREDENTIALS_DEBUG'])->onlyInput('email');
+        return back()->withErrors(['email' => 'Invalid email or password. Please try again.'])->onlyInput('email');
     }
 
     public function logout(Request $request)
     {
-        // Logout of standard auth if they were using it
-        if (auth()->check()) {
-            Auth::logout();
-        }
-        
+        Auth::guard('admin')->logout();
         session()->forget('admin_authenticated');
         return redirect()->route('admin.loginform')->with('success', 'Admin logged out successfully.');
     }
@@ -140,7 +139,7 @@ class AdminAuthController extends Controller
             $user->update(['password' => Hash::make($request->password)]);
             
             // Auto login after reset
-            Auth::login($user);
+            Auth::guard('admin')->login($user);
             session(['admin_authenticated' => true]);
             
             session()->forget(['admin_password_reset_verified_identity', 'admin_reset_identity', 'admin_reset_otp', 'admin_reset_otp_expires_at']);

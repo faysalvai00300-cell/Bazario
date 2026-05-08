@@ -296,7 +296,7 @@
             TOP SELLING
         </h2>
     </a>
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 force-3-cols">
         @foreach($megaDeals as $product)
         @php
             $effect = $product->mega_deal_effect ?? 'all';
@@ -371,7 +371,7 @@
         </h2>
     </a>
 
-    <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-4">
+    <div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-2 sm:gap-4 force-4-cols">
         @for($i = 1; $i <= 18; $i++)
         @php $category = $page1Cats[$i] ?? null; @endphp
         <div class="category-box relative group overflow-hidden hover:shadow-sm transition-all duration-300 category-mobile-box border-2 border-gray-100/80 rounded-xl @if(!$category) bg-white @endif" style="aspect-ratio: 1/1; backface-visibility: hidden; transform: translateZ(0); -webkit-font-smoothing: antialiased;">

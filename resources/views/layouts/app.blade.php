@@ -370,17 +370,81 @@
             }
         @endif
 
+        /* Global PC/Laptop Centering & Padding */
         @media (min-width: 768px) {
-            .max-w-6xl { max-width: 1280px !important; margin-left: auto; margin-right: auto; padding-left: 20px; padding-right: 20px; }
+            .max-w-6xl, .max-w-7xl, .max-w-\[1440px\], .max-w-screen-xl, .max-w-screen-2xl, #main-products-view { 
+                margin-left: auto !important; 
+                margin-right: auto !important; 
+                padding-left: 20px; 
+                padding-right: 20px; 
+            }
+        }
+
+        /* Small PC / Large Tablet (751px - 1023px) */
+        @media (min-width: 751px) and (max-width: 1023px) {
+            .max-w-6xl, .max-w-7xl, .max-w-\[1440px\], #main-products-view { 
+                max-width: 860px !important; 
+            }
+            .force-3-cols {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+            }
+            .force-4-cols {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            }
         }
         
-        /* Laptop Specific Optimization (1024px - 1366px) */
-        @media (min-width: 1024px) and (max-width: 1366px) {
-            .max-w-6xl { max-width: 1140px !important; }
-            .nav-item-container { margin-right: 1.5rem !important; }
-            .mega-menu { width: 800px !important; }
+        /* Laptop Small (1024px - 1160px) */
+        @media (min-width: 1024px) and (max-width: 1160px) {
+            .max-w-6xl, .max-w-7xl, .max-w-\[1440px\] { 
+                max-width: 960px !important; 
+            }
+            #main-products-view {
+                max-width: 1020px !important;
+            }
+
+            .nav-item-container { margin-right: 1.2rem !important; }
+            .mega-menu { width: 850px !important; }
         }
-        
+
+
+        /* Laptop Standard (1161px - 1440px) */
+        @media (min-width: 1161px) and (max-width: 1440px) {
+            .max-w-6xl, .max-w-7xl, .max-w-\[1440px\] { 
+                max-width: 1080px !important; 
+            }
+            #main-products-view {
+                max-width: 1240px !important;
+            }
+
+            .nav-item-container { margin-right: 1.2rem !important; }
+            .mega-menu { width: 850px !important; }
+        }
+
+
+        /* Large Desktop (1441px - 1600px) */
+        @media (min-width: 1441px) and (max-width: 1600px) {
+            .max-w-6xl, .max-w-7xl, .max-w-\[1440px\], #main-products-view { 
+                max-width: 1320px !important; 
+            }
+        }
+
+
+
+        /* Ultra Wide Desktop (1601px - 1920px+) */
+        @media (min-width: 1601px) {
+            .max-w-6xl, .max-w-7xl, .max-w-\[1440px\] { 
+                max-width: 1480px !important; 
+            }
+            /* Less gap for All Products page on large screens */
+            #main-products-view {
+                max-width: 1640px !important;
+            }
+
+        }
+
+
+
+
         [x-cloak] { display: none !important; }
 
         /* Prevent image vanishing on scroll in some browsers */
@@ -1319,7 +1383,6 @@
                             <li class="hidden md:block">
                                 <a href="{{ route('pages.faq') }}" class="hover:text-[#45b86f] transition-colors">FAQs</a>
                             </li>
-                            <li class="hidden md:block"><a href="{{ route('pages.track-order') }}" class="hover:text-[#45b86f] transition-colors">Contact Us</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -1328,11 +1391,8 @@
                 <div class="hidden md:block col-span-1 lg:-ml-12">
                     <!-- Call Center -->
                     <div>
-                        <h4 class="text-[11px] font-black uppercase tracking-[0.15em] text-[#ffde59] mb-5 hidden md:flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-                            For any help you may call us at
-                        </h4>
-                        <div class="space-y-1">
+                        <h3 class="text-[14px] font-black uppercase tracking-widest text-white mb-4 hidden md:block">Contact Us</h3>
+                        <div class="space-y-1 md:mt-14">
                             <a href="tel:{{ $siteSettings->contact_phone ?? '8801700000000' }}" 
                                class="text-[20px] font-black text-white hover:text-[#45b86f] transition-colors flex items-center gap-2">
                                 {{ $siteSettings->contact_phone ?? '+880 1700-000000' }}

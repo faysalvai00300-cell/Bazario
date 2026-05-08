@@ -71,7 +71,7 @@ class OrderController extends Controller
             }
         }
 
-        return back()->with('success', 'Order status updated!');
+        return redirect()->route('admin.orders.index')->with('success', 'Order status updated!');
     }
 
     public function updatePaymentStatus(Request $request, Order $order)

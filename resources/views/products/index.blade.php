@@ -94,7 +94,7 @@
         }
     </style>
 
-    <div id="main-products-view" class="mx-auto px-4 lg:px-8 py-6" style="max-width: 1600px !important; padding-top: 24px;">
+    <div id="main-products-view" class="mx-auto px-4 lg:px-8 py-6" style="padding-top: 24px;">
         <div x-data="{ mobileFiltersOpen: false }" class="flex flex-col lg:flex-row gap-8 lg:gap-14">
 
             <!-- Sidebar Filters -->
@@ -144,9 +144,9 @@
                         </ul>
                         <div x-data="{ 
                                                     min: {{ request('min_price', $minPrice ?? 0) }}, 
-                                                    max: {{ request('max_price', $maxPrice ?? 30000) }},
+                                                    max: {{ request('max_price', $maxPrice ?? 10000) }},
                                                     minTotal: {{ $minPrice ?? 0 }},
-                                                    maxTotal: {{ $maxPrice ?? 30000 }},
+                                                    maxTotal: {{ $maxPrice ?? 10000 }},
                                                     get minP() { return ((this.min - this.minTotal) / (this.maxTotal - this.minTotal)) * 100 },
                                                     get maxP() { return ((this.max - this.minTotal) / (this.maxTotal - this.minTotal)) * 100 }
                                                 }" class="mb-8 lg:pr-4"
@@ -531,7 +531,7 @@
 
                 {{-- Product Grid --}}
                 @if($products->count() > 0)
-                    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3 lg:gap-4 force-3-cols">
                         @foreach($products as $product)
                             @include('partials.product-card', ['product' => $product])
                         @endforeach

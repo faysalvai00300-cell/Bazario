@@ -16,7 +16,7 @@
             selectedCategoryId: '{{ request('category_id', '') }}',
             selectedCategoryPage: '{{ request('target_page', '') }}',
             featuredCounts: {{ json_encode($featuredCounts) }},
-            limits: { '1': 14, '2': 8, '3': 8, '4': 14, '5': 14 },
+            limits: { '1': 14, '2': 14, '3': 14, '4': 20, '5': 20 },
             get currentCount() { return this.featuredCounts[this.selectedCategoryId] || 0 },
             get currentLimit() { return this.limits[this.selectedCategoryPage] || 20 },
             get isLimitReached() { return this.currentCount >= this.currentLimit },
