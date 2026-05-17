@@ -198,94 +198,96 @@
 }">
     <div></div>
 
-    <div class="bg-white p-4 rounded shadow-sm border border-gray-100 mb-6 mx-2 no-print">
-        <div class="flex flex-wrap items-center justify-between gap-6">
-            <div class="flex flex-wrap items-center gap-5">
-                <span class="text-[10px] text-gray-900 font-black uppercase tracking-widest hidden lg:block">Actions:</span>
-                
-                <button onclick="location.reload()" class="w-9 h-9 bg-indigo-50 text-indigo-600 rounded flex items-center justify-center hover:bg-indigo-600 hover:text-white transition shadow-sm border border-indigo-100" title="Reload Page">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                </button>
-
-                <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open" class="px-5 py-1.5 bg-[#4f46e5] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-indigo-700 transition shadow-sm">
-                        <i data-lucide="plus" class="w-3.5 h-3.5"></i> Status
+    <div class="no-print" style="position: sticky; top: 64px; z-index: 50; background-color: #f5f6f8; padding-top: 12px; padding-bottom: 12px; margin-top: -12px; margin-bottom: 12px;">
+        <div class="bg-white p-4 rounded shadow-sm border border-gray-100">
+            <div class="flex flex-wrap items-center justify-between gap-6">
+                <div class="flex flex-wrap items-center gap-5">
+                    <span class="text-[10px] text-gray-900 font-black uppercase tracking-widest hidden lg:block">Actions:</span>
+                    
+                    <button onclick="location.reload()" class="w-9 h-9 bg-indigo-50 text-indigo-600 rounded flex items-center justify-center hover:bg-indigo-600 hover:text-white transition shadow-sm border border-indigo-100" title="Reload Page">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
                     </button>
-                    <div x-show="open" x-cloak @click.away="open = false" class="absolute left-0 mt-2 w-48 bg-white rounded capitalize font-medium z-[3000]">
-                        @foreach(['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'] as $status)
-                            <button @click="bulkStatus('{{ $status }}'); open = false;" class="w-full text-left px-4 py-2.5 hover:bg-indigo-50 hover:text-indigo-600 transition-colors capitalize font-medium">{{ $status }}</button>
-                        @endforeach
-                    </div>
-                </div>
 
-                <button @click="bulkDelete()" class="px-5 py-1.5 bg-[#e11d48] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-rose-700 transition shadow-sm">
-                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
-                </button>
-                
-                <button @click="printInvoices()" class="px-5 py-1.5 bg-[#0ea5e9] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-sky-600 transition shadow-sm">
-                    <i data-lucide="printer" class="w-3.5 h-3.5"></i> Print
-                </button>
-
-                <button class="px-5 py-1.5 bg-[#64748b] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-slate-700 transition shadow-sm">
-                    <i data-lucide="tag" class="w-3.5 h-3.5 text-white"></i> Label
-                </button>
-                
-                <span class="text-[10px] text-gray-900 font-black uppercase tracking-widest hidden lg:block ml-16">Couriers:</span>
-                <button @click="openCourierModal('steadfast')" 
-                    class="px-4 py-1.5 bg-[#22d3ee] text-white rounded text-[12px] font-bold hover:bg-cyan-600 transition shadow-sm border-none cursor-pointer">Steadfast</button>
-                <button @click="openCourierModal('pathao')" 
-                    class="px-4 py-1.5 bg-[#f59e0b] text-white rounded text-[12px] font-bold hover:bg-amber-600 transition shadow-sm border-none cursor-pointer">Pathao</button>
-                <button @click="openCourierModal('redx')" 
-                    class="px-4 py-1.5 bg-[#ea580c] text-white rounded text-[12px] font-bold hover:bg-orange-600 transition shadow-sm border-none cursor-pointer">RedX</button>
-            </div>
-
-            <!-- Hidden Form for Bulk Actions -->
-            <form id="bulk-action-form" method="POST" class="hidden">
-                @csrf
-                <input type="hidden" name="ids" id="bulk-action-ids">
-            </form>
-
-            <div class="flex items-center gap-5">
-                <div class="relative" x-data="{ open: false }">
-                    <button @click="open = !open" class="px-4 py-1.5 bg-white border border-gray-200 text-gray-700 rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-gray-50 transition shadow-sm">
-                        <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Date Filter
-                    </button>
-                    <div x-show="open" x-cloak @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white rounded shadow-2xl border border-gray-100 z-[3000] py-2 text-[12px]">
-                        <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition">Today</button>
-                        <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition">Yesterday</button>
-                        <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition">Last 7 Days</button>
-                        <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition">This Month</button>
-                        
-                        <div class="px-4 py-3 border-t border-gray-100 mt-2">
-                            <span class="block text-[10px] text-gray-400 uppercase font-black mb-2 tracking-widest">Custom Range:</span>
-                            <form action="{{ route('admin.orders.index') }}" method="GET" class="space-y-2">
-                                <div class="space-y-1">
-                                    <label class="text-[9px] font-bold text-gray-500 uppercase">From:</label>
-                                    <input type="date" name="start_date" class="w-full border border-gray-200 rounded px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                                </div>
-                                <div class="space-y-1">
-                                    <label class="text-[9px] font-bold text-gray-500 uppercase">To:</label>
-                                    <input type="date" name="end_date" class="w-full border border-gray-200 rounded px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                                </div>
-                                <button type="submit" class="w-full bg-indigo-600 text-white rounded py-1.5 text-[11px] font-bold hover:bg-indigo-700 transition mt-1 shadow-sm shadow-indigo-200">
-                                    Apply Filter
-                                </button>
-                            </form>
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="px-5 py-1.5 bg-[#4f46e5] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-indigo-700 transition shadow-sm">
+                            <i data-lucide="plus" class="w-3.5 h-3.5"></i> Status
+                        </button>
+                        <div x-show="open" x-cloak @click.away="open = false" class="absolute left-0 mt-2 w-48 bg-white rounded capitalize font-medium z-[3000]">
+                            @foreach(['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'] as $status)
+                                <button @click="bulkStatus('{{ $status }}'); open = false;" class="w-full text-left px-4 py-2.5 hover:bg-indigo-50 hover:text-indigo-600 transition-colors capitalize font-medium">{{ $status }}</button>
+                            @endforeach
                         </div>
                     </div>
+
+                    <button @click="bulkDelete()" class="px-5 py-1.5 bg-[#e11d48] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-rose-700 transition shadow-sm">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
+                    </button>
+                    
+                    <button @click="printInvoices()" class="px-5 py-1.5 bg-[#0ea5e9] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-sky-600 transition shadow-sm">
+                        <i data-lucide="printer" class="w-3.5 h-3.5"></i> Print
+                    </button>
+
+                    <button class="px-5 py-1.5 bg-[#64748b] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-slate-700 transition shadow-sm">
+                        <i data-lucide="tag" class="w-3.5 h-3.5 text-white"></i> Label
+                    </button>
+                    
+                    <span class="text-[10px] text-gray-900 font-black uppercase tracking-widest hidden lg:block ml-16">Couriers:</span>
+                    <button @click="openCourierModal('steadfast')" 
+                        class="px-4 py-1.5 bg-[#22d3ee] text-white rounded text-[12px] font-bold hover:bg-cyan-600 transition shadow-sm border-none cursor-pointer">Steadfast</button>
+                    <button @click="openCourierModal('pathao')" 
+                        class="px-4 py-1.5 bg-[#f59e0b] text-white rounded text-[12px] font-bold hover:bg-amber-600 transition shadow-sm border-none cursor-pointer">Pathao</button>
+                    <button @click="openCourierModal('redx')" 
+                        class="px-4 py-1.5 bg-[#ea580c] text-white rounded text-[12px] font-bold hover:bg-orange-600 transition shadow-sm border-none cursor-pointer">RedX</button>
                 </div>
-                <a href="{{ route('admin.pos.index') }}" class="bg-[#e11d48] text-white px-5 py-1.5 rounded flex items-center gap-2 text-[12px] font-bold hover:bg-rose-700 transition shadow-sm">
-                    <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i> POS Create
-                </a>
-                <form action="{{ route('admin.orders.index') }}" method="GET">
-                    <div class="relative">
-                        <input type="text" name="search" value="{{ request('search') }}" 
-                            x-on:input.debounce.500ms="$el.form.submit()"
-                            placeholder="Search Order..." 
-                            class="border border-gray-200 rounded pl-4 pr-10 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 w-80 transition-all">
-                        <i data-lucide="search" class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    </div>
+
+                <!-- Hidden Form for Bulk Actions -->
+                <form id="bulk-action-form" method="POST" class="hidden">
+                    @csrf
+                    <input type="hidden" name="ids" id="bulk-action-ids">
                 </form>
+
+                <div class="flex items-center gap-5">
+                    <div class="relative" x-data="{ open: false }">
+                        <button @click="open = !open" class="px-4 py-1.5 bg-white border border-gray-200 text-gray-700 rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-gray-50 transition shadow-sm">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i> Date Filter
+                        </button>
+                        <div x-show="open" x-cloak @click.away="open = false" class="absolute right-0 mt-2 w-56 bg-white rounded shadow-2xl border border-gray-100 z-[3000] py-2 text-[12px]">
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition">Today</button>
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition">Yesterday</button>
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition">Last 7 Days</button>
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition">This Month</button>
+                            
+                            <div class="px-4 py-3 border-t border-gray-100 mt-2">
+                                <span class="block text-[10px] text-gray-400 uppercase font-black mb-2 tracking-widest">Custom Range:</span>
+                                <form action="{{ route('admin.orders.index') }}" method="GET" class="space-y-2">
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-bold text-gray-500 uppercase">From:</label>
+                                        <input type="date" name="start_date" class="w-full border border-gray-200 rounded px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[9px] font-bold text-gray-500 uppercase">To:</label>
+                                        <input type="date" name="end_date" class="w-full border border-gray-200 rounded px-2 py-1 text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    </div>
+                                    <button type="submit" class="w-full bg-indigo-600 text-white rounded py-1.5 text-[11px] font-bold hover:bg-indigo-700 transition mt-1 shadow-sm shadow-indigo-200">
+                                        Apply Filter
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ route('admin.pos.index') }}" class="bg-[#e11d48] text-white px-5 py-1.5 rounded flex items-center gap-2 text-[12px] font-bold hover:bg-rose-700 transition shadow-sm">
+                        <i data-lucide="shopping-cart" class="w-3.5 h-3.5"></i> POS Create
+                    </a>
+                    <form action="{{ route('admin.orders.index') }}" method="GET">
+                        <div class="relative">
+                            <input type="text" name="search" value="{{ request('search') }}" 
+                                x-on:input.debounce.500ms="$el.form.submit()"
+                                placeholder="Search Order..." 
+                                class="border border-gray-200 rounded pl-4 pr-10 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 w-80 transition-all">
+                            <i data-lucide="search" class="w-4 h-4 absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -298,7 +300,7 @@
     </form>
 
     <!-- Table Card -->
-    <div class="bg-white rounded shadow-sm border border-gray-200 overflow-hidden mx-2">
+    <div class="bg-white rounded shadow-sm border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto custom-scrollbar">
             <table class="w-full text-left border-collapse min-w-[1500px]">
                 <thead class="bg-gray-200">
@@ -306,15 +308,16 @@
                         <th class="px-4 py-4 text-center w-12 no-print">
                             <input type="checkbox" @click="toggleAll()" :checked="selectAll" class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
                         </th>
+                        <th class="px-2 py-4 text-center text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100 no-print">SL</th>
                         <th class="px-2 py-4 text-center text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100 no-print">ACTION</th>
-                        <th class="px-2 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">INVOICE</th>
+                        <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">INVOICE</th>
                         <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">DATE</th>
                         <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">CUSTOMER NAME</th>
                         <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">IP ADDRESS</th>
-                        <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">ORDER NOTE</th>
-                        <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">ADMIN NOTE</th>
-                        <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">AMOUNT</th>
-                        <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">STATUS</th>
+                        <th class="px-4 py-4 text-center text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">ORDER NOTE</th>
+                        <th class="px-4 py-4 text-center text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">ADMIN NOTE</th>
+                        <th class="px-4 py-4 text-right pr-20 text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">AMOUNT</th>
+                        <th class="px-4 py-4 text-left pl-56 text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">STATUS</th>
                         <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100">COURIER</th>
                         <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100 no-print">TRACK</th>
                         <th class="px-4 py-4 text-left text-[10px] font-black text-gray-900 uppercase tracking-widest border-b border-gray-100 no-print">FRAUD CHECK</th>
@@ -387,15 +390,25 @@
                         </td>
                         <td class="px-4 py-8">
                             <div class="flex flex-col gap-1.5">
-                                <span class="text-[11px] font-mono font-bold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded w-fit">{{ $order->ip_address ?? '127.0.0.1' }}</span>
+                                <span class="text-[11px] font-mono font-bold text-gray-900 bg-gray-50 px-1.5 py-0.5 rounded w-fit">{{ $order->ip_address ?? '127.0.0.1' }}</span>
                                 @if($order->ip_address)
-                                    <form action="{{ route('admin.ip-blocks.store') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="ip_address" value="{{ $order->ip_address }}">
-                                        <button type="submit" class="bg-rose-500 text-white text-[9px] px-2 py-0.5 rounded flex items-center justify-center gap-1 w-fit hover:bg-rose-600 transition font-black uppercase tracking-tighter">
-                                            <i data-lucide="shield-off" class="w-2.5 h-2.5"></i> Block IP
-                                        </button>
-                                    </form>
+                                    @if(isset($blockedIps) && isset($blockedIps[$order->ip_address]))
+                                        <form action="{{ route('admin.ip-blocks.destroy', $blockedIps[$order->ip_address]) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-white text-[9px] px-1 py-0.5 rounded flex items-center justify-center gap-0.5 transition font-black uppercase tracking-tighter shadow-sm" style="background-color: #10b981; width: 75px; white-space: nowrap;">
+                                                <i data-lucide="shield" class="w-2.5 h-2.5"></i> Unblock IP
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('admin.ip-blocks.store') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="ip_address" value="{{ $order->ip_address }}">
+                                            <button type="submit" class="bg-rose-500 text-white text-[9px] px-1 py-0.5 rounded flex items-center justify-center gap-0.5 transition font-black uppercase tracking-tighter" style="width: 75px; white-space: nowrap;">
+                                                <i data-lucide="shield-off" class="w-2.5 h-2.5"></i> Block IP
+                                            </button>
+                                        </form>
+                                    @endif
                                 @endif
                             </div>
                         </td>

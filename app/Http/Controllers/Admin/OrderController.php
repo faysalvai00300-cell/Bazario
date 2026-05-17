@@ -36,8 +36,9 @@ class OrderController extends Controller
 
         $orders = $query->latest()->paginate(20)->withQueryString();
         $products = \App\Models\Product::orderBy('name')->get(['id', 'name']);
+        $blockedIps = \App\Models\IpBlock::pluck('id', 'ip_address')->toArray();
         
-        return view('admin.orders.index', compact('orders', 'products'));
+        return view('admin.orders.index', compact('orders', 'products', 'blockedIps'));
     }
 
     public function show(Order $order)

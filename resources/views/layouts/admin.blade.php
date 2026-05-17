@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" x-data="{ 
     sidebarOpen: false,
+    adminMenuOpen: false,
     toggleSidebar() { this.sidebarOpen = !this.sidebarOpen },
     closeSidebar() { this.sidebarOpen = false }
 }">
@@ -57,10 +58,24 @@
             background: linear-gradient(135deg, #8a4fd4, #6b3ab0) !important;
         }
 
-        /* Layout Fixes without Tailwind JIT */
+        /* Layout Fixes without Tailwind JIT & FOUC Prevention on Refresh */
         @media (min-width: 768px) {
             .desktop-ml-256 { margin-left: 256px !important; }
             .desktop-w-calc { width: calc(100% - 256px) !important; }
+            aside {
+                position: fixed !important;
+                top: 64px !important;
+                left: 0 !important;
+                bottom: 0 !important;
+                width: 256px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                transform: translateX(0) !important;
+            }
+            main {
+                margin-left: 256px !important;
+                width: calc(100% - 256px) !important;
+            }
         }
 
         /* ====================================================
@@ -351,7 +366,7 @@
             <!-- Logo Area -->
             <div class="w-64 flex items-center justify-between shrink-0 pr-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 text-white decoration-transparent">
-                    <img src="{{ asset('bazario-logo.png') }}" alt="Logo" style="height: 40px; width: auto;" class="md:!h-12 object-contain">
+                    <img src="{{ asset('main-logo.png') }}" alt="Logo" style="height: 40px; width: auto;" class="md:!h-12 object-contain">
                     <span class="text-[20px] font-bold tracking-tight leading-none mt-0.5">Bazario</span>
                 </a>
                 <button @click="toggleSidebar()" class="text-gray-400 hover:text-white transition hidden md:block ml-auto">
@@ -448,7 +463,7 @@
                                                     if (Notification.permission === 'granted') {
                                                         const n = new Notification('New Order Received!', {
                                                             body: 'Order #' + data.latest_order_id + ' has just arrived.',
-                                                            icon: '{{ asset('bazario-logo.png') }}',
+                                                            icon: '{{ asset('main-logo.png') }}',
                                                             tag: 'new-order'
                                                         });
                                                         n.onclick = () => { window.focus(); n.close(); };
@@ -596,12 +611,41 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 cursor-pointer sm:border-l sm:border-gray-700 sm:pl-4 sm:ml-2">
+            <div @click="adminMenuOpen = !adminMenuOpen" @click.away="adminMenuOpen = false" class="relative flex items-center gap-2 cursor-pointer sm:border-l sm:border-gray-700 sm:pl-4 sm:ml-2 select-none">
                 <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden ring-2 ring-gray-700">
                     <img src="https://ui-avatars.com/api/?name=Admin&background=random" class="w-full h-full object-cover">
                 </div>
                 <span class="text-xs font-medium text-gray-200 hidden sm:block">Admin</span>
-                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 hidden sm:block"></i>
+                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 hidden sm:block transition-transform duration-200" :class="adminMenuOpen ? 'rotate-180' : ''"></i>
+
+                <!-- Admin Dropdown Menu -->
+                <div x-show="adminMenuOpen" 
+                     x-transition:enter="transition ease-out duration-200"
+                     x-transition:enter-start="opacity-0 translate-y-2 scale-95"
+                     x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                     x-transition:leave="transition ease-in duration-75"
+                     x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                     x-transition:leave-end="opacity-0 translate-y-2 scale-95"
+                     class="absolute right-0 top-full mt-3 w-48 rounded-xl shadow-2xl overflow-hidden z-[5000]"
+                     style="background-color: #00002a; border: 1px solid rgba(255,255,255,0.15);"
+                     x-cloak
+                     @click.stop>
+                    <div class="py-1">
+                        <a href="{{ route('admin.profile.index') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-all decoration-none">
+                            <i data-lucide="user-cog" class="w-4 h-4"></i> Profile Setting
+                        </a>
+                        <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/5 transition-all decoration-none">
+                            <i data-lucide="settings" class="w-4 h-4"></i> Settings
+                        </a>
+                        <div class="border-t border-white/10 my-1"></div>
+                        <form action="{{ session('admin_authenticated') ? route('admin.logout') : route('logout') }}" method="POST" class="m-0">
+                            @csrf
+                            <button type="submit" class="flex items-center gap-2.5 px-4 py-2.5 w-full text-left bg-transparent border-none cursor-pointer text-xs font-semibold text-red-400 hover:text-white hover:bg-red-500/20 transition-all focus:outline-none">
+                                <i data-lucide="log-out" class="w-4 h-4"></i> {{ __('Logout') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
