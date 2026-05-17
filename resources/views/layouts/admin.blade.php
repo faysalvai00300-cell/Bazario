@@ -351,7 +351,7 @@
             <!-- Logo Area -->
             <div class="w-64 flex items-center justify-between shrink-0 pr-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 text-white decoration-transparent">
-                    <img src="{{ asset('main-logo.png') }}" alt="Logo" style="height: 40px; width: auto;" class="md:!h-12 object-contain">
+                    <img src="{{ asset('bazario-logo.png') }}" alt="Logo" style="height: 40px; width: auto;" class="md:!h-12 object-contain">
                     <span class="text-[20px] font-bold tracking-tight leading-none mt-0.5">Bazario</span>
                 </a>
                 <button @click="toggleSidebar()" class="text-gray-400 hover:text-white transition hidden md:block ml-auto">

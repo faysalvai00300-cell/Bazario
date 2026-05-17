@@ -9,7 +9,7 @@
         <!-- Logo -->
         <div class="flex items-center justify-center mb-10 text-center">
             <a href="{{ route('home') }}" class="flex items-center justify-center group">
-                <img src="{{ asset('Bazario-logo.png') }}" alt="Bazario Logo" class="h-14 w-auto object-contain">
+                <img src="{{ asset('bazario-logo.png') }}?v={{ time() }}" alt="Bazario Logo" class="h-14 w-auto object-contain">
             </a>
         </div>
 
