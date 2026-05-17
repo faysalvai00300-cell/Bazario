@@ -189,7 +189,7 @@
     },
     printInvoices() {
         if (this.selected.length === 0) {
-            alert('Please select at least one order to print invoices.');
+            alert('Please select at least one order to print.');
             return;
         }
         const ids = this.selected.join(',');
@@ -222,12 +222,8 @@
                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> Delete
                 </button>
                 
-                <button @click="bulkPrint()" class="px-5 py-1.5 bg-[#0ea5e9] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-sky-600 transition shadow-sm">
+                <button @click="printInvoices()" class="px-5 py-1.5 bg-[#0ea5e9] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-sky-600 transition shadow-sm">
                     <i data-lucide="printer" class="w-3.5 h-3.5"></i> Print
-                </button>
-
-                <button @click="printInvoices()" class="px-5 py-1.5 bg-[#6366f1] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-indigo-600 transition shadow-sm">
-                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Invoice
                 </button>
 
                 <button class="px-5 py-1.5 bg-[#64748b] text-white rounded text-[12px] font-bold flex items-center gap-1.5 hover:bg-slate-700 transition shadow-sm">
