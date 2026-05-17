@@ -77,7 +77,7 @@ class POSController extends Controller
                     'order_number' => $orderId,
                     'user_id' => null, // POS walk-in
                     'name' => $request->customer_name,
-                    'email' => 'pos@smartlookbd.com',
+                    'email' => 'pos@Bazario.com',
                     'phone' => $request->customer_phone,
                     'address' => $request->customer_address ?? 'POS Customer',
                     'city' => 'POS',
@@ -102,6 +102,7 @@ class POSController extends Controller
                         'product_name' => $product->name,
                         'quantity' => $item['quantity'],
                         'price' => $price,
+                        'buying_price' => $product->buying_price,
                         'total' => $price * $item['quantity'],
                     ]);
 

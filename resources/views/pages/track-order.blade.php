@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Track Your Order - SmartLookBD')
+@section('title', 'Track Your Order - Bazario')
 @section('content')
 <div class="max-w-5xl mx-auto px-4 py-8 sm:py-12">
     <div class="max-w-3xl mx-auto text-center mb-8">

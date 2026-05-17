@@ -37,11 +37,7 @@ class ProductController extends Controller
         if ($request->filled('category')) {
             $activeCategory = Category::where('slug', $request->category)->first();
             if ($activeCategory) {
-                $categoryIds = [$activeCategory->id];
-                if ($activeCategory->linked_category_id) {
-                    $categoryIds[] = $activeCategory->linked_category_id;
-                }
-                $query->whereIn('category_id', $categoryIds);
+                $activeCategory->applyAllProductsFilter($query);
                 $activeCategory->load(['subcategories' => function($q) {
                     $q->where('is_active', true)->withCount('products')->orderBy('sort_order');
                 }]);
@@ -56,31 +52,31 @@ class ProductController extends Controller
         }
 
         if ($request->filled('min_price')) {
-            $query->where('price', '>=', $request->min_price);
+            $query->where('products.price', '>=', $request->min_price);
         }
 
         if ($request->filled('max_price')) {
-            $query->where('price', '<=', $request->max_price);
+            $query->where('products.price', '<=', $request->max_price);
         }
 
         if ($request->filled('rating')) {
-            $query->where('rating', '>=', $request->rating);
+            $query->where('products.rating', '>=', $request->rating);
         }
 
         if ($request->boolean('featured')) {
-            $query->where('is_featured', true);
+            $query->where('products.is_featured', true);
         }
 
         if ($request->boolean('new')) {
-            $query->where('is_new', true);
+            $query->where('products.is_new', true);
         }
 
         if ($request->boolean('mega_deal')) {
-            $query->where('is_mega_deal', true);
+            $query->where('products.is_mega_deal', true);
         }
 
         if ($request->boolean('free_shipping')) {
-            $query->where('free_shipping', true);
+            $query->where('products.free_shipping', true);
         }
 
         switch ($request->sort) {
@@ -105,11 +101,8 @@ class ProductController extends Controller
         
         // Adjust counts for linked categories
         foreach ($categories as $cat) {
-            if ($cat->linked_category_id) {
-                // Get the linked category's own product count
-                $linkedCatCount = Product::active()->where('category_id', $cat->linked_category_id)->count();
-                $cat->products_count += $linkedCatCount;
-            }
+            $linkedCount = $cat->linkedProducts()->where('is_active', true)->count();
+            $cat->products_count += $linkedCount;
         }
         
         $maxPrice = 10000;
@@ -187,14 +180,7 @@ class ProductController extends Controller
 
     public function category(\App\Models\Category $category, Request $request)
     {
-        $categoryIds = [$category->id];
-        if ($category->linked_category_id) {
-            $categoryIds[] = $category->linked_category_id;
-        }
-
-        $query = Product::active()
-            ->whereIn('category_id', $categoryIds)
-            ->with('category');
+        $query = $category->allProducts()->active()->with('category');
 
         if ($request->filled('subcategory')) {
             $subcat = Subcategory::where('slug', $request->subcategory)->first();
@@ -218,10 +204,8 @@ class ProductController extends Controller
         
         // Adjust counts for linked categories
         foreach ($categories as $cat) {
-            if ($cat->linked_category_id) {
-                $linkedCatCount = Product::active()->where('category_id', $cat->linked_category_id)->count();
-                $cat->products_count += $linkedCatCount;
-            }
+            $linkedCount = $cat->linkedProducts()->where('is_active', true)->count();
+            $cat->products_count += $linkedCount;
         }
         $pageTitle = $category->name;
 
@@ -267,10 +251,8 @@ class ProductController extends Controller
         
         // Adjust counts for linked categories
         foreach ($categories as $cat) {
-            if ($cat->linked_category_id) {
-                $linkedCatCount = Product::active()->where('category_id', $cat->linked_category_id)->count();
-                $cat->products_count += $linkedCatCount;
-            }
+            $linkedCount = $cat->linkedProducts()->where('is_active', true)->count();
+            $cat->products_count += $linkedCount;
         }
         $pageTitle = '🔥 Flash Sale';
 

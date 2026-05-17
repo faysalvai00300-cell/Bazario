@@ -56,7 +56,7 @@
 
                 <div>
                     <label class="text-sm font-bold text-gray-700 mb-2 block dark:text-gray-300">Sender ID</label>
-                    <input type="text" name="sms_sender_id" value="{{ old('sms_sender_id', $settings->sms_sender_id ?? '') }}" placeholder="e.g. SmartLookBD"
+                    <input type="text" name="sms_sender_id" value="{{ old('sms_sender_id', $settings->sms_sender_id ?? '') }}" placeholder="e.g. Bazario"
                         class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#FF6A00] focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
                 </div>
 
@@ -94,7 +94,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2">
                         <label class="text-sm font-bold text-gray-700 mb-2 block dark:text-gray-300">SMTP Host</label>
-                        <input type="text" name="smtp_host" value="{{ old('smtp_host', $settings->smtp_host ?? '') }}" placeholder="e.g. mail.smartlookbd.com"
+                        <input type="text" name="smtp_host" value="{{ old('smtp_host', $settings->smtp_host ?? '') }}" placeholder="e.g. mail.Bazario.com"
                             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#FF6A00] focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
                     </div>
                     
@@ -114,7 +114,7 @@
 
                     <div class="col-span-2">
                         <label class="text-sm font-bold text-gray-700 mb-2 block dark:text-gray-300">SMTP Username / Email</label>
-                        <input type="text" name="smtp_username" value="{{ old('smtp_username', $settings->smtp_username ?? '') }}" placeholder="e.g. info@smartlookbd.com"
+                        <input type="text" name="smtp_username" value="{{ old('smtp_username', $settings->smtp_username ?? '') }}" placeholder="e.g. info@Bazario.com"
                             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#FF6A00] focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
                     </div>
 
@@ -126,7 +126,7 @@
 
                     <div class="col-span-2">
                         <label class="text-sm font-bold text-gray-700 mb-2 block dark:text-gray-300">Sender "From" Address</label>
-                        <input type="email" name="smtp_from_address" value="{{ old('smtp_from_address', $settings->smtp_from_address ?? '') }}" placeholder="e.g. no-reply@smartlookbd.com"
+                        <input type="email" name="smtp_from_address" value="{{ old('smtp_from_address', $settings->smtp_from_address ?? '') }}" placeholder="e.g. no-reply@Bazario.com"
                             class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-[#FF6A00] focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
                     </div>
 

@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'SmartLookBD Dashboard')
+@section('title', 'Bazario Dashboard')
 
 @section('content')
 <style>
@@ -33,22 +33,34 @@
 </div>
 
 <!-- Stats Grid -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
-    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-        <div class="text-xs text-gray-400 mb-3 font-medium">Total Orders</div>
-        <div class="text-2xl font-extrabold text-gray-800" x-text="$store.stats.total_orders.toLocaleString()"></div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="h-1 bg-gradient-to-r from-blue-400 to-blue-600"></div>
+        <div class="p-5">
+            <div class="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">Total Orders</div>
+            <div class="text-[26px] font-extrabold text-gray-800" x-text="$store.stats.total_orders.toLocaleString()"></div>
+        </div>
     </div>
-    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-        <div class="text-xs text-gray-400 mb-3 font-medium">Total Customers</div>
-        <div class="text-2xl font-extrabold text-gray-800" x-text="$store.stats.total_customers.toLocaleString()"></div>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="h-1 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+        <div class="p-5">
+            <div class="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">Total Customers</div>
+            <div class="text-[26px] font-extrabold text-gray-800" x-text="$store.stats.total_customers.toLocaleString()"></div>
+        </div>
     </div>
-    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-        <div class="text-xs text-gray-400 mb-3 font-medium">Total Products</div>
-        <div class="text-2xl font-extrabold text-gray-800" x-text="$store.stats.total_products.toLocaleString()"></div>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="h-1 bg-gradient-to-r from-violet-400 to-violet-600"></div>
+        <div class="p-5">
+            <div class="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">Total Products</div>
+            <div class="text-[26px] font-extrabold text-gray-800" x-text="$store.stats.total_products.toLocaleString()"></div>
+        </div>
     </div>
-    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-        <div class="text-xs text-gray-400 mb-3 font-medium">Delivered Orders</div>
-        <div class="text-2xl font-extrabold text-gray-800" x-text="$store.stats.delivered_orders.toLocaleString()"></div>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="h-1 bg-gradient-to-r from-amber-400 to-orange-500"></div>
+        <div class="p-5">
+            <div class="text-xs text-gray-400 mb-2 font-semibold uppercase tracking-wide">Delivered Orders</div>
+            <div class="text-[26px] font-extrabold text-gray-800" x-text="$store.stats.delivered_orders.toLocaleString()"></div>
+        </div>
     </div>
 </div>
 

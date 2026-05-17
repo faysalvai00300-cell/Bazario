@@ -31,6 +31,29 @@ class Category extends Model
         return $this->hasMany(Product::class);
     }
 
+    public function linkedProducts()
+    {
+        return $this->belongsToMany(Product::class, 'category_product');
+    }
+
+    public function allProducts()
+    {
+        return $this->applyAllProductsFilter(Product::query());
+    }
+
+    public function applyAllProductsFilter($query)
+    {
+        return $query->where(function ($q) {
+            $q->where('products.category_id', $this->id)
+                ->orWhereExists(function ($q) {
+                    $q->select(\Illuminate\Support\Facades\DB::raw(1))
+                        ->from('category_product')
+                        ->whereColumn('category_product.product_id', 'products.id')
+                        ->where('category_product.category_id', $this->id);
+                });
+        });
+    }
+
     public function getRouteKeyName()
     {
         return 'slug';

@@ -11,8 +11,8 @@ class Product extends Model
 
     protected $fillable = [
         'category_id', 'subcategory_id', 'name', 'slug', 'description',
-        'short_description', 'price', 'sale_price', 'stock', 'sku', 'thumbnail',
-        'rating', 'review_count', 'is_featured', 'is_active', 'is_new', 'brand',
+        'short_description', 'price', 'buying_price', 'sale_price', 'stock', 'sku', 'thumbnail',
+        'rating', 'review_count', 'is_featured', 'is_active', 'is_new', 'is_top_sell', 'brand',
         'weight', 'specifications', 'sizes', 'colors', 'free_shipping',
         'meta_title', 'meta_description', 'meta_keywords', 'video_url', 'size_chart',
         'is_mega_deal', 'is_size_chart_active', 'color_swatches', 'color_image_indices', 'mega_deal_effect'
@@ -25,6 +25,7 @@ class Product extends Model
         'is_featured' => 'boolean',
         'is_active' => 'boolean',
         'is_new' => 'boolean',
+        'is_top_sell' => 'boolean',
         'specifications' => 'array',
         'sizes' => 'array',
         'colors' => 'array',
@@ -39,6 +40,11 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function linkedCategories()
+    {
+        return $this->belongsToMany(Category::class, 'category_product');
     }
 
     public function subcategory()
@@ -113,12 +119,12 @@ class Product extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('is_active', true);
+        return $query->where('products.is_active', true);
     }
 
     public function scopeFeatured($query)
     {
-        return $query->where('is_featured', true);
+        return $query->where('products.is_featured', true);
     }
 
     public function getColorImageUrl($colorName)

@@ -13,48 +13,58 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     @php
-        $defaultTitle = $siteSettings->seo_meta_title ?? 'SmartLookBD - Premium Online Shopping in Bangladesh';
-        $defaultDesc = $siteSettings->seo_meta_description ?? 'Shop the best perfumes, fragrances, and luxury items at SmartLookBD. Authentic products with fast delivery in Bangladesh.';
-        $defaultKeywords = $siteSettings->seo_meta_keywords ?? 'SmartLookBD, Smart Look BD, SmartLook BD, SmartLukBD, Smart BD, LookBD, Smart Look Bangladesh, SmartLookBD.com, SmartLook BD Online Shopping, Smart লুক বিডি, smartlook, bd smartlock, smrtlok, smartlock, smartlok';
+        $defaultTitle = $siteSettings->seo_meta_title ?? 'Bazario - Premium Online Shopping in Bangladesh';
+        $defaultDesc = $siteSettings->seo_meta_description ?? 'Shop the best perfumes, fragrances, and luxury items at Bazario. Authentic products with fast delivery in Bangladesh.';
+        $defaultKeywords = $siteSettings->seo_meta_keywords ?? 'Bazario, Bazario BD, Bazario Bangladesh, Bazario.com.bd, Bazario Online Shopping, বাজারিও, bazario, bazario bd';
 
         $pageTitle = View::hasSection('meta_title') ? View::getSection('meta_title') : (View::hasSection('title') ? View::getSection('title') : $defaultTitle);
         $pageDesc = View::hasSection('meta_description') ? View::getSection('meta_description') : $defaultDesc;
         $pageKeywords = View::hasSection('meta_keywords') ? View::getSection('meta_keywords') : $defaultKeywords;
+        
+        // SEO Helper: Ensure all URLs use HTTPS
+        $canonicalUrl = str_replace('http://', 'https://', url()->current());
+        $siteBaseUrl = str_replace('http://', 'https://', url('/'));
     @endphp
     
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDesc }}">
     <meta name="keywords" content="{{ $pageKeywords }}">
-    <link rel="canonical" href="{{ url()->current() }}">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <meta name="author" content="SmartLookBD">
+    <link rel="canonical" href="{{ $canonicalUrl }}">
+    
+    {{-- Prevent Soft 404: If a product list is empty, tell search engines not to index it --}}
+    @if(isset($products) && $products->count() === 0 && (request()->routeIs('products.index') || request()->routeIs('category.show') || request()->routeIs('products.flash-sales')))
+        <meta name="robots" content="noindex, follow">
+    @else
+        <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    @endif
+    <meta name="author" content="Bazario">
     <meta name="geo.region" content="BD">
     <meta name="geo.placename" content="Dhaka">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:site_name" content="SmartLookBD">
+    <meta property="og:site_name" content="Bazario">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:url" content="{{ $canonicalUrl }}">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDesc }}">
-    <meta property="og:image" content="@yield('og_image', asset('final logo.jpeg'))">
+    <meta property="og:image" content="@yield('og_image', asset('bazario-logo.png'))">
     <meta property="og:locale" content="en_US">
     <meta property="og:locale:alternate" content="bn_BD">
-
+ 
     <!-- Favicon -->
-    <link rel="icon" type="image/jpeg" href="{{ asset('final logo.jpeg') }}">
-    <link rel="shortcut icon" href="{{ asset('final logo.jpeg') }}">
-    <link rel="apple-touch-icon" href="{{ asset('final logo.jpeg') }}">
-    <link rel="image_src" href="{{ asset('final logo.jpeg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('bazario-logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('bazario-logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('bazario-logo.png') }}">
+    <link rel="image_src" href="{{ asset('bazario-logo.png') }}">
     <!-- Priority Image Loading for Logo -->
-    <link rel="preload" as="image" href="{{ asset('final logo.jpeg') }}">
-
+    <link rel="preload" as="image" href="{{ asset('bazario-logo.png') }}">
+ 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="{{ url()->current() }}">
+    <meta property="twitter:url" content="{{ $canonicalUrl }}">
     <meta property="twitter:title" content="{{ $pageTitle }}">
     <meta property="twitter:description" content="{{ $pageDesc }}">
-    <meta property="twitter:image" content="@yield('og_image', asset('final logo.jpeg'))">
+    <meta property="twitter:image" content="@yield('og_image', asset('bazario-logo.png'))">
 
     <!-- Google Site Verification -->
     <meta name="google-site-verification" content="Am0GjVZ6-DmUyisHtR4GX-9PAfWwHY0_Swfb0A57n5w" /> 
@@ -71,13 +81,13 @@
       "@@graph": [
         {
           "@@type": "Organization",
-          "@@id": "{{ url('/') }}/#organization",
-          "name": "SmartLookBD",
-          "alternateName": ["Smart Look BD", "SmartLook BD", "SmartLukBD", "Smart BD", "SmartLook Bangladesh", "Smart লুক বিডি", "smartlook", "bd smartlock", "smrtlok", "smartlock"],
-          "url": "{{ url('/') }}",
+          "@@id": "{{ $siteBaseUrl }}/#organization",
+          "name": "Bazario",
+          "alternateName": ["Bazario BD", "Bazario Bangladesh", "বাজারিও", "bazario"],
+          "url": "{{ $siteBaseUrl }}",
           "logo": {
             "@@type": "ImageObject",
-            "url": "{{ asset('final logo.jpeg') }}",
+            "url": "{{ asset('bazario-logo.png') }}",
             "width": 600,
             "height": 600
           },
@@ -89,17 +99,17 @@
             "availableLanguage": ["en", "bn"]
           },
           "sameAs": [
-            "https://www.facebook.com/SmartLookBD",
-            "https://www.instagram.com/SmartLookBD",
+            "https://www.facebook.com/Bazario",
+            "https://www.instagram.com/Bazario",
             "{{ $siteSettings->facebook_page_link ?? '#' }}"
           ]
         },
         {
           "@@type": "WebSite",
-          "@@id": "{{ url('/') }}/#website",
-          "url": "{{ url('/') }}",
-          "name": "SmartLookBD",
-          "alternateName": ["Smart Look BD", "SmartLook BD", "Smart BD", "smartlook", "smartlock"],
+          "@@id": "{{ $siteBaseUrl }}/#website",
+          "url": "{{ $siteBaseUrl }}",
+          "name": "Bazario",
+          "alternateName": ["Bazario BD", "Bazario Bangladesh", "bazario"],
           "description": "{{ $defaultDesc }}",
           "publisher": { "@@id": "{{ url('/') }}/#organization" },
           "potentialAction": {
@@ -116,6 +126,84 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <style>
+        /* ===== Universal Box Border Consistency (Powerful Override) ===== */
+        /* Targets Inputs, Selects, and Textareas */
+        input, select, textarea, .search-box {
+            border: 1px solid rgba(0,0,0,0.15) !important;
+            border-radius: 8px !important;
+            background-color: #ffffff !important;
+        }
+        /* Targets ALL Product Cards, Category Boxes, Banners, and White Containers */
+        .product-card, .card, .mega-product-card, .mega-deal-box,
+        .category-item img, .category-box, [class*="product-grid"] > div,
+        .bg-white.rounded-lg, .bg-white.rounded-xl, .bg-white.rounded-2xl,
+        .border, .border-gray-100, .border-gray-200, .border-e5e7eb {
+            border: 1px solid rgba(0,0,0,0.1) !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important;
+        }
+        /* Specific Fix for Home Page Category Circles and Grids */
+        .rounded-full.border, .category-img-wrapper {
+            border: 1px solid rgba(0,0,0,0.1) !important;
+        }
+        /* EXCLUDE Navigation and Specific Buttons from Global Border */
+        .nav-link, button, .btn, 
+        [class*="button"], [class*="btn-"], .shop-now,
+        .menu-item, .premium-menu-item,
+        .md\:hidden.bg-white.border-b a {
+            border: none !important;
+            border-right: 1px solid rgba(0,0,0,0.1) !important;
+        }
+        .nav-item-container a {
+            border: none !important;
+            border-right: none !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        #main-mobile-navbar button {
+            border: none !important;
+            border-right: none !important;
+            box-shadow: none !important;
+        }
+        #main-mobile-navbar input[name="q"] {
+            border: 1px solid #ccc !important;
+            border-radius: 2px !important;
+            background-color: #ffffff !important;
+            box-shadow: none !important;
+        }
+
+        /* Clean Promo Bar Styling */
+        .promo-bar-outer {
+            border: none !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            background-color: #ffffff !important;
+            box-shadow: none !important;
+        }
+        .promo-bar-container {
+            border: none !important;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+        .promo-bar-container a {
+            border: none !important;
+            border-right: 1px solid #e5e7eb !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+        .promo-bar-container a:hover {
+            background-color: #f9fafb !important;
+        }
+        .promo-bar-container .app-promo-box {
+            border: none !important;
+            border-left: 1px solid #e5e7eb !important;
+            background-color: transparent !important;
+            box-shadow: none !important;
+        }
+        .promo-bar-container .app-promo-box a {
+            border: none !important;
+            border-right: none !important;
+        }
+
+
         /* Mega Menu Styles */
         .mega-menu {
             position: absolute;
@@ -179,7 +267,7 @@
         }
 
         .mega-menu-column ul li a:hover {
-            color: #45b86f;
+            color: #222222;
             transform: translateX(4px);
         }
 
@@ -204,7 +292,7 @@
         }
 
         .mega-product-card:hover {
-            border-color: #45b86f;
+            border-color: #222222;
             transform: translateY(-2px);
         }
 
@@ -281,18 +369,18 @@
 
         .premium-menu-item:hover .arrow-icon {
             transform: translateX(3px);
-            color: #45b86f;
+            color: #222222;
         }
 
         /* Active State */
         .premium-menu-item.active-link {
             background: white;
-            border-color: #45b86f;
-            box-shadow: 0 10px 15px -3px rgba(69, 184, 111, 0.1);
+            border-color: #222222;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
         
         .premium-menu-item.active-link .menu-label {
-            color: #45b86f;
+            color: #222222;
         }
 
         /* Icon Gradients */
@@ -525,8 +613,8 @@
         }
 
         .product-box:hover, .category-box:hover, .product-card:hover {
-            border-color: #45b86f !important;
-            box-shadow: 0 10px 25px -5px rgba(69, 184, 111, 0.15) !important;
+            border-color: #222222 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
             transform: translateY(-5px) !important;
         }
 
@@ -566,7 +654,7 @@
         }
         .hero-swiper .swiper-button-next:hover,
         .hero-swiper .swiper-button-prev:hover {
-            background-color: #45b86f;
+            background-color: #222222;
             transform: scale(1.1);
         }
 
@@ -642,11 +730,11 @@
         }
 
         .brand-logo-font .f-orange {
-            color: #45b86f;
+            color: #222222;
         }
         @media (max-width: 767px) {
             .logo-accent {
-                color: #45b86f !important;
+                color: #222222 !important;
                 text-shadow: none;
             }
         }
@@ -729,18 +817,18 @@
 @if(!request()->routeIs('checkout.*') && !request()->routeIs('login') && !request()->routeIs('login.verify'))
     <!-- Bottom Mobile Navigation (At very top of body for instant rendering) -->
     <div id="mobile-bottom-nav" class="fixed bottom-0 left-0 w-full bg-white md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.15)] border-t border-gray-100 flex items-center justify-between z-[9999]">
-        <a href="{{ route('home') }}" class="flex-1 flex flex-col items-center justify-center {{ request()->routeIs('home') ? 'text-[#007BFF]' : 'text-gray-500' }}" style="color: {{ request()->routeIs('home') ? '#007BFF' : '#6B7280' }};">
+        <a href="{{ route('home') }}" class="flex-1 flex flex-col items-center justify-center {{ request()->routeIs('home') ? 'text-[#222222]' : 'text-gray-500' }}" style="color: {{ request()->routeIs('home') ? '#222222' : '#6B7280' }};">
             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>
             <span class="text-[9px] font-bold uppercase mt-0.5">Home</span>
         </a>
-        <a href="{{ route('categories.index') }}" class="flex-1 flex flex-col items-center justify-center {{ request()->routeIs('categories.index') || request()->routeIs('category.show') ? 'text-[#007BFF]' : 'text-gray-500' }}" style="color: {{ request()->routeIs('categories.index') || request()->routeIs('category.show') ? '#007BFF' : '#6B7280' }};">
+        <a href="{{ route('categories.index') }}" class="flex-1 flex flex-col items-center justify-center {{ request()->routeIs('categories.index') || request()->routeIs('category.show') ? 'text-[#222222]' : 'text-gray-500' }}" style="color: {{ request()->routeIs('categories.index') || request()->routeIs('category.show') ? '#222222' : '#6B7280' }};">
             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
             <span class="text-[9px] font-bold uppercase mt-0.5">Category</span>
         </a>
-        <a href="javascript:void(0)" onclick="toggleSideCart(true, true)" class="flex-1 flex flex-col items-center justify-center {{ request()->routeIs('cart.*') ? 'text-[#007BFF]' : 'text-gray-500' }}" style="color: {{ request()->routeIs('cart.*') ? '#007BFF' : '#6B7280' }};">
+        <a href="javascript:void(0)" onclick="toggleSideCart(true, true)" class="flex-1 flex flex-col items-center justify-center {{ request()->routeIs('cart.*') ? 'text-[#222222]' : 'text-gray-500' }}" style="color: {{ request()->routeIs('cart.*') ? '#222222' : '#6B7280' }};">
             <div class="relative inline-block">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
-                <span id="mobile-cart-badge" class="cart-count-badge absolute -top-1.5 -right-2 bg-[#FF6A00] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-lg z-50" 
+                <span id="mobile-cart-badge" class="cart-count-badge absolute -top-1.5 -right-2 bg-[#FF3F6C] text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-lg z-50" 
                       x-show="$store.cart.count > 0" x-text="$store.cart.count" x-cloak>
                 </span>
             </div>
@@ -750,7 +838,7 @@
             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" /></svg>
             <span class="text-[9px] font-bold uppercase mt-0.5">Chat</span>
         </a>
-        <a href="{{ route('account.dashboard') }}" class="flex-1 flex flex-col items-center justify-center {{ request()->routeIs('account.*') || request()->routeIs('login') ? 'text-[#007BFF]' : 'text-gray-500' }}" style="color: {{ (request()->routeIs('account.*') || request()->routeIs('login')) ? '#007BFF' : '#6B7280' }};">
+        <a href="{{ route('account.dashboard') }}" class="flex-1 flex flex-col items-center justify-center {{ request()->routeIs('account.*') || request()->routeIs('login') ? 'text-[#222222]' : 'text-gray-500' }}" style="color: {{ (request()->routeIs('account.*') || request()->routeIs('login')) ? '#222222' : '#6B7280' }};">
             <div class="relative">
                 <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
                 @if(isset($unreadMessagesCount) && $unreadMessagesCount > 0)
@@ -861,8 +949,8 @@
 
 @if(isset($siteSettings) && $siteSettings->announcement_text)
     @php $annoSpeed = max(5, (int) ($siteSettings->announcement_speed ?? 45)); @endphp
-    <div class="announcement-bar bg-black text-white py-1.5 md:py-4 text-center text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-widest relative z-[60] overflow-hidden" style="background-color: #000000 !important; color: #ffffff !important;">
-        <div id="ticker-strip" style="position:absolute; left:0; top:0; white-space:nowrap; will-change:transform;">
+    <div class="announcement-bar my-6 bg-black text-white text-center text-[10px] sm:text-xs md:text-sm font-bold uppercase tracking-widest relative z-[60] overflow-hidden" style="background-color: #000000 !important; color: #ffffff !important; height: 42px; display: flex; align-items: center;">
+        <div id="ticker-strip" style="position:absolute; left:0; top:50%; transform:translateY(-50%); white-space:nowrap; will-change:transform;">
             <span style="padding:0 5rem;">{{ $siteSettings->announcement_text }}</span>
             <span style="padding:0 5rem;">{{ $siteSettings->announcement_text }}</span>
             <span style="padding:0 5rem;">{{ $siteSettings->announcement_text }}</span>
@@ -927,16 +1015,10 @@
 
                 <!-- Logo (Centered on mobile, static on PC) -->
                 <div class="flex items-center flex-shrink-0 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 pointer-events-none md:pointer-events-auto z-10 w-auto mobile-brand-container">
-                    <a href="{{ route('home') }}" class="flex items-center justify-center gap-1 group pointer-events-auto mx-auto w-full md:w-auto">
-                        <img src="{{ asset('final logo.jpeg') }}" 
-                            alt="SmartLookBD Logo" 
-                            fetchpriority="high"
-                            loading="eager"
-                            title="SmartLookBD - Premium Online Shopping Bangladesh"
-                            class="h-6 md:h-12 w-auto object-contain transition-transform group-hover:scale-105">
-                        <span class="brand-logo-font text-gray-900 group-hover:text-black transition-all duration-300 whitespace-nowrap" style="line-height: 1.2;">
-                            <span style="font-size: 1.1em; color: inherit;">S</span>martLookBD
-                        </span>
+                    <a href="{{ route('home') }}" class="flex items-center justify-center group pointer-events-auto mx-auto w-full md:w-auto md:translate-y-0">
+                        <img src="{{ asset('bazario-logo.png') }}" 
+                            alt="Bazario Logo" 
+                            class="h-10 md:h-16 w-auto object-contain transition-transform group-hover:scale-105">
                     </a>
                 </div>
 
@@ -949,7 +1031,7 @@
                             $routeParams = $isSports ? ['category' => 'sports'] : ['gender' => $gender];
                             $isActive = $isSports ? request('category') === 'sports' : request('gender') === $gender;
                         @endphp
-                        <a href="{{ route('products.index', $routeParams) }}" class="text-[12px] font-black {{ $isActive ? 'text-[#45b86f]' : 'text-[#606371]' }} hover:text-[#45b86f] transition-all uppercase tracking-[0.12em] whitespace-nowrap py-10">
+                        <a href="{{ route('products.index', $routeParams) }}" class="text-[12px] font-black {{ $isActive ? 'text-[#222222]' : 'text-[#606371]' }} hover:text-[#222222] transition-all uppercase tracking-[0.12em] whitespace-nowrap pt-10 pb-6">
                             {{ $gender }}
                         </a>
                         
@@ -1014,7 +1096,7 @@
                                             <a href="{{ route('products.show', $naProd->slug) }}" class="mega-product-card">
                                                 <img src="{{ $naProd->thumbnail_url }}" alt="{{ $naProd->name }}" class="mega-product-img">
                                                 <div class="mega-product-name">{{ $naProd->name }}</div>
-                                                <div class="text-[10px] font-black text-[#45b86f]">৳{{ number_format($naProd->effective_price) }}</div>
+                                                <div class="text-[10px] font-black text-[#222222]">৳{{ number_format($naProd->effective_price) }}</div>
                                             </a>
                                         @endforeach
                                     </div>
@@ -1026,8 +1108,8 @@
                 </div>
 
                 <!-- Search Bar (Right Aligned) -->
-                <div class="hidden md:flex items-center ml-auto px-4 mr-10" x-data="searchbar()">
-                    <div class="relative w-full max-w-[300px]">
+                <div class="hidden md:flex items-center ml-auto px-4 mr-4" x-data="searchbar()">
+                    <div class="relative w-full max-w-[320px]">
                         <form action="{{ route('products.index') }}" method="GET" class="relative group">
                             <input type="text" name="q" x-model="query" @input.debounce.300ms="search()" @focus="showResults = query.length > 1" @click.away="showResults = false" placeholder="Search" 
                                    class="w-full border-none px-5 py-2.5 rounded-sm text-[13px] focus:outline-none focus:ring-1 focus:ring-gray-200 transition-all shadow-none" 
@@ -1049,7 +1131,7 @@
                                             <div class="flex-1 min-w-0">
                                                 <p class="text-[13px] font-bold text-gray-900 leading-tight truncate" x-text="item.name"></p>
                                                 <div class="flex items-center gap-2 mt-1">
-                                                    <p class="text-[13px] text-[#45b86f] font-black" x-text="`৳${item.effective_price.toLocaleString()}`"></p>
+                                                    <p class="text-[13px] text-[#222222] font-black" x-text="`৳${item.effective_price.toLocaleString()}`"></p>
                                                     <template x-if="item.old_price">
                                                         <p class="text-[11px] text-gray-400 line-through" x-text="`৳${item.old_price.toLocaleString()}`"></p>
                                                     </template>
@@ -1079,7 +1161,7 @@
                 </div>
 
                 <!-- Nav Icons (Right) -->
-                <div class="flex items-center justify-end gap-1 sm:gap-4 md:gap-4 xl:gap-8 ml-auto md:ml-0 md:mr-4 xl:mr-16">
+                <div class="flex items-center justify-end gap-1 sm:gap-4 md:gap-4 xl:gap-6 ml-auto md:ml-0 md:mr-2 xl:mr-4">
                     <!-- Search Icon (Mobile only) -->
                     <button type="button" @click="searchOpen = !searchOpen; if(searchOpen) { $nextTick(() => { $refs.mobileSearchInput.focus() }) }" class="md:hidden p-2 rounded-full hover:bg-gray-100 transition">
                         <svg class="w-6 h-6 text-[#333333]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
@@ -1092,28 +1174,28 @@
 
                     <!-- Track Order (PC Only) -->
                     <a href="{{ route('pages.track-order') }}" class="hidden md:flex flex-col items-center group">
-                        <svg class="w-6 h-6 md:w-8 md:h-8 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <circle cx="12" cy="11" r="3" stroke="currentColor" stroke-width="1.5"/>
                         </svg>
-                        <span class="text-[11px] font-bold text-gray-500 mt-1.5 leading-none">Track</span>
+                        <span class="text-[10px] font-bold text-gray-500 mt-1 leading-none">Track</span>
                     </a>
 
                     <!-- Wishlist (PC Only) -->
                     <a href="{{ route('wishlist.index') }}" class="hidden md:flex flex-col items-center group">
-                        <svg class="w-6 h-6 md:w-8 md:h-8 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
-                        <span class="text-[11px] font-bold text-gray-500 mt-1.5 leading-none">Wishlist</span>
+                        <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                        <span class="text-[10px] font-bold text-gray-500 mt-1 leading-none">Wishlist</span>
                     </a>
 
                     <!-- Cart (PC Only) -->
                     <a href="javascript:void(0)" onclick="toggleSideCart(true)" class="hidden md:flex flex-col items-center group relative">
                         <div class="relative">
                             <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
-                            <span class="cart-count-badge absolute -top-1.5 -right-1.5 bg-[#FF6A00] text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                            <span class="cart-count-badge absolute -top-1.5 -right-1.5 bg-[#FF3F6C] text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
                                   x-show="$store.cart.count > 0" x-text="$store.cart.count" x-cloak>
                             </span>
                         </div>
-                        <span class="text-[10px] md:text-[11px] font-bold text-gray-500 mt-1 md:mt-1.5 leading-none">Bag</span>
+                        <span class="text-[10px] font-bold text-gray-500 mt-1 leading-none">Bag</span>
                     </a>
 
                     <!-- Account / Login Section -->
@@ -1122,12 +1204,12 @@
                             <!-- Desktop Profile Button -->
                             <button @click="profileOpen = !profileOpen" class="hidden md:flex flex-col items-center group relative">
                                 <div class="relative">
-                                    <svg class="w-6 h-6 md:w-8 md:h-8 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                     @if(isset($unreadMessagesCount) && $unreadMessagesCount > 0)
                                         <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
                                     @endif
                                 </div>
-                                <span class="text-[11px] font-bold text-gray-500 mt-1.5 leading-none">Profile</span>
+                                <span class="text-[10px] font-bold text-gray-500 mt-1 leading-none">Profile</span>
                             </button>
                             <!-- Mobile Profile Link -->
                             <a href="{{ route('account.dashboard') }}" class="hidden md:hidden p-2 rounded-full hover:bg-gray-100 transition relative">
@@ -1159,11 +1241,11 @@
                                             Messages
                                         </div>
                                         @if(isset($unreadMessagesCount) && $unreadMessagesCount > 0)
-                                            <span class="bg-[#FF6A00] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">{{ $unreadMessagesCount }}</span>
+                                            <span class="bg-[#FF3F6C] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">{{ $unreadMessagesCount }}</span>
                                         @endif
                                     </a>
                                     @if(auth()->user()->role === 'admin')
-                                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 text-xs text-[#45b86f] font-bold hover:bg-gray-50 transition-colors">
+                                        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-4 py-2 text-xs text-[#222222] font-bold hover:bg-gray-50 transition-colors">
                                             Admin Panel
                                         </a>
                                     @endif
@@ -1178,8 +1260,8 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}" class="hidden md:flex flex-col items-center group">
-                            <svg class="w-6 h-6 md:w-14 md:h-14 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                            <span class="text-[11px] font-bold text-gray-500 mt-1.5 leading-none">Login</span>
+                            <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-700 group-hover:text-black transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            <span class="text-[10px] font-bold text-gray-500 mt-1 leading-none">Login</span>
                         </a>
                     @endauth
                 </div>
@@ -1189,16 +1271,16 @@
         <!-- Full-Width Navigation Menu (Mobile/Desktop Hidden if using Header Nav) -->
         <div class="hidden shadow-lg" style="background-color: black !important; border-top: 1px solid #333333;">
             <div class="max-w-7xl mx-auto w-full flex items-center justify-center gap-8 py-3.5 overflow-x-auto text-[13px] font-extrabold tracking-wide" style="color: white !important;">
-                <a href="{{ route('home') }}" class="hover:text-[#45b86f] hover:scale-105 transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 {{ request()->routeIs('home') ? 'text-[#45b86f]' : '' }}" style="color: inherit;">
+                <a href="{{ route('home') }}" class="hover:text-[#222222] hover:scale-105 transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 {{ request()->routeIs('home') ? 'text-[#222222]' : '' }}" style="color: inherit;">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     Home
                 </a>
-                <a href="{{ route('products.index') }}" class="hover:text-[#45b86f] hover:scale-105 transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 {{ request()->routeIs('products.index') && !request()->hasAny(['q', 'category', 'featured', 'new']) ? 'text-[#45b86f]' : '' }}" style="color: inherit;">
+                <a href="{{ route('products.index') }}" class="hover:text-[#222222] hover:scale-105 transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 {{ request()->routeIs('products.index') && !request()->hasAny(['q', 'category', 'featured', 'new']) ? 'text-[#222222]' : '' }}" style="color: inherit;">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"/></svg>
                     All Products
                 </a>
                 @foreach(\App\Models\Category::where('is_active', true)->where('slug', '!=', 'grocery-food')->orderBy('sort_order')->take(7)->get() as $cat)
-                    <a href="{{ route('category.show', $cat->slug) }}" class="hover:text-[#45b86f] hover:scale-105 transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 {{ request()->is('category/' . $cat->slug) ? 'text-[#45b86f]' : '' }}" style="color: inherit;">
+                    <a href="{{ route('category.show', $cat->slug) }}" class="hover:text-[#222222] hover:scale-105 transition-all duration-300 whitespace-nowrap flex items-center gap-1.5 {{ request()->is('category/' . $cat->slug) ? 'text-[#222222]' : '' }}" style="color: inherit;">
                         <span class="text-base">{{ $cat->icon }}</span> {{ ucwords(str_replace('-', ' ', $cat->slug)) }}
                     </a>
                 @endforeach
@@ -1213,12 +1295,12 @@
             <div x-show="searchOpen" x-transition class="md:hidden pb-3" style="display: none;" x-data="searchbar()">
                 <form action="{{ route('products.index') }}" method="GET">
                     <div class="relative">
-                        <input type="text" x-ref="mobileSearchInput" name="q" x-model="query" @input.debounce.300ms="search()" @focus="showResults = query.length > 1" @click.away="showResults = false" placeholder="Search products..." class="w-full pl-4 pr-12 py-2.5 rounded-full border border-black bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#45b86f]" autocomplete="off">
+                        <input type="text" x-ref="mobileSearchInput" name="q" x-model="query" @input.debounce.300ms="search()" @focus="showResults = query.length > 1" @click.away="showResults = false" placeholder="Search products..." class="w-full pl-4 pr-12 py-2.5 rounded-full border border-black bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#222222]" autocomplete="off">
                         <!-- Loading Indicator (Mobile) -->
                         <div x-show="loading" class="absolute right-12 top-1/2 -translate-y-1/2">
-                            <svg class="animate-spin h-4 w-4 text-[#45b86f]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            <svg class="animate-spin h-4 w-4 text-[#222222]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         </div>
-                        <button type="submit" class="absolute right-1 top-1 bg-[#45b86f] text-white p-1.5 rounded-full">
+                        <button type="submit" class="absolute right-1 top-1 bg-[#222222] text-white p-1.5 rounded-full">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
                         </button>
 
@@ -1234,7 +1316,7 @@
                                             <div class="flex-1 min-w-0">
                                                 <p class="text-[13px] font-bold text-gray-900 leading-tight truncate" x-text="item.name"></p>
                                                 <div class="flex items-center gap-2 mt-1">
-                                                    <p class="text-[13px] text-[#45b86f] font-black" x-text="`৳${item.effective_price.toLocaleString()}`"></p>
+                                                    <p class="text-[13px] text-[#222222] font-black" x-text="`৳${item.effective_price.toLocaleString()}`"></p>
                                                     <template x-if="item.old_price">
                                                         <p class="text-[11px] text-gray-400 line-through" x-text="`৳${item.old_price.toLocaleString()}`"></p>
                                                     </template>
@@ -1309,195 +1391,285 @@
 
 @if(!request()->routeIs('login') && !request()->routeIs('login.verify'))
     <!-- Footer -->
-<footer class="text-white mt-20 pb-4 md:pb-0 {{ request()->routeIs('checkout.index') ? 'hidden md:block' : '' }} pt-6 md:pt-[80px]" style="background-color: #2D2D2D !important;">
+    <style>
+        #footer-section {
+            background-color: #58595b !important;
+            color: #ebebeb !important;
+            font-family: 'Inter', sans-serif !important;
+            font-size: 0.9rem !important;
+        }
+        .sub-item-list {
+            list-style: none !important;
+            cursor: pointer !important;
+            padding-top: 4px !important;
+            padding-bottom: 4px !important;
+            transition: 0.3s ease all !important;
+        }
+        .sub-item-list:hover {
+            padding-left: 5px !important;
+        }
+        .sub-item-list a {
+            color: #ebebeb !important;
+            text-decoration: none !important;
+            transition: color 0.3s !important;
+        }
+        .sub-item-list a:hover {
+            color: #f7941e !important;
+        }
+        .fb-verify-card {
+            display: flex !important;
+            gap: 12px !important;
+            text-decoration: none !important;
+            background: #ffffffcc !important;
+            backdrop-filter: blur(6px) !important;
+            border: 1px solid #e8e8e8 !important;
+            border-radius: 14px !important;
+            padding: 12px 14px !important;
+            box-shadow: 0 8px 30px rgba(0,0,0,.12) !important;
+            margin: 16px 0px !important;
+            max-width: 320px !important;
+            transition: box-shadow 0.2s, transform 0.2s !important;
+        }
+        .fb-verify-card:hover {
+            box-shadow: 0 10px 36px rgba(0,0,0,.16) !important;
+            text-decoration: none !important;
+            transform: translateY(-1px) !important;
+        }
+        .fb-verify-left {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 10px !important;
+            background: #F0F4FF !important;
+        }
+        .fb-verify-right {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        .fb-verify-title {
+            font-weight: 700 !important;
+            color: #111111 !important;
+            display: flex !important;
+            align-items: center !important;
+            font-size: 14px !important;
+            line-height: 1.2 !important;
+        }
+        .fb-badge {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            font-size: 12px !important;
+            color: #1877F2 !important;
+            background: #EAF1FF !important;
+            border-radius: 999px !important;
+            margin: 0px 10px 0px 3px !important;
+        }
+        .fb-verify-sub {
+            font-size: 11px !important;
+            color: #666666 !important;
+            margin-top: 4px !important;
+            line-height: 1.2 !important;
+        }
+        .fb-verify-subtitle {
+            font-size: 12px !important;
+            color: #1877F2 !important;
+            font-weight: 600 !important;
+        }
+        .fb-follow-i {
+            font-size: 5px !important;
+            vertical-align: middle !important;
+            padding: 0px 4px !important;
+            color: #888888 !important;
+        }
+        .footer-social .social {
+            display: inline-flex !important;
+            width: 36px !important;
+            height: 36px !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 8px !important;
+            transition: transform .15s ease, background-color .15s ease !important;
+            background: rgba(255,255,255,0.05) !important;
+        }
+        .footer-social .social img {
+            width: 20px !important;
+            height: 20px !important;
+            display: block !important;
+            filter: invert(1) brightness(1.2) !important;
+        }
+        .footer-social .social:hover {
+            transform: translateY(-2px) !important;
+            background: rgba(255,255,255,0.15) !important;
+        }
+        .hover-orange:hover {
+            color: #f7941e !important;
+        }
+        .mail-subscribe-btn {
+            background-color: #f7941e !important;
+            color: white !important;
+            font-size: 12px !important;
+            font-weight: bold !important;
+            text-transform: uppercase !important;
+            padding: 6px 20px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            transition: background-color 0.2s !important;
+        }
+        .mail-subscribe-btn:hover {
+            background-color: #e68212 !important;
+        }
+    </style>
+    <footer id="footer-section" class="mt-12 pb-4 md:pb-0 {{ request()->routeIs('checkout.index') ? 'hidden md:block' : '' }}" style="padding-top: 64px !important;">
         <!-- Footer Top -->
-        <div class="max-w-[1440px] mx-auto px-6 pt-0 pb-12 sm:py-20">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-x-24 xl:gap-x-32 gap-y-12">
+        <div class="max-w-[1440px] mx-auto px-6 pb-16">
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-y-12 gap-x-12 xl:gap-x-16">
                 
-                <!-- Left Column: Brand & Nav -->
-                <div class="col-span-1">
-                    <!-- Mobile Logo (Centered) -->
-                    <div class="md:hidden text-center mb-8">
-                        <span class="brand-logo-font text-3xl font-black tracking-tighter" style="color: white !important;">SmartLook<span class="text-[#45b86f]">BD</span></span>
-                        <div class="flex flex-col items-center mt-4 gap-1.5 opacity-50">
-                            <div class="w-12 h-[1px] bg-[#45b86f]"></div>
-                            <div class="w-8 h-[1px] bg-white"></div>
-                        </div>
+                <!-- Left Column: Brand Logo & Navigation Links (25% width) -->
+                <div class="col-span-1 lg:col-span-1">
+                    <div class="mb-6 flex justify-start">
+                        <a href="{{ route('home') }}">
+                            <img src="{{ asset('Bazario-logo.png') }}" class="h-12 w-auto object-contain" style="filter: brightness(0) invert(1);" alt="Bazario Logo">
+                        </a>
                     </div>
-                    
-                    <!-- PC Logo (Left Aligned) -->
-                    <div class="hidden md:block mb-8 mt-[-10px]">
-                        <span class="brand-logo-font text-3xl font-black tracking-tighter" style="color: white !important;">SmartLook<span class="text-[#45b86f]">BD</span></span>
-                    </div>
-                    
-                    <nav class="space-y-4">
-                        <ul class="space-y-3 text-[13px] font-bold text-gray-300">
-                            <!-- Mobile Version -->
-                            <li class="md:hidden flex items-start justify-between border-b border-white/10 pb-4 mb-4">
-                                <a href="{{ route('home') }}" class="hover:text-[#45b86f] transition-colors">About SmartLookBD</a>
-                                <div class="flex flex-col items-end">
-                                    <a href="{{ route('pages.track-order') }}" class="text-[11px] font-black uppercase text-[#ffde59] border-b border-[#ffde59]/30 pb-0.5">Contact Us</a>
-                                    <a href="tel:{{ $siteSettings->contact_phone ?? '8801700000000' }}" class="text-[12px] font-bold text-white mt-0.5">
-                                        {{ $siteSettings->contact_phone ?? '+880 1700-000000' }}
-                                    </a>
-                                    <p class="text-[9px] text-[#45b86f] font-black uppercase tracking-[0.2em] mt-1">24/7 Support</p>
-                                </div>
+                    <nav>
+                        <ul style="list-style: none; padding: 0; margin: 0;" class="space-y-1">
+                            <li class="sub-item-list">
+                                <a href="{{ route('home') }}">About Bazario</a>
                             </li>
-
-                            <!-- PC Version -->
-                            <li class="hidden md:block">
-                                <a href="{{ route('home') }}" class="hover:text-[#45b86f] transition-colors">About SmartLookBD</a>
+                            <li class="sub-item-list">
+                                <a href="{{ route('pages.return-policy') }}">Terms & Conditions</a>
                             </li>
-                            <!-- Terms & Conditions -->
-                            <li class="md:hidden flex items-center justify-between border-b border-white/5 pb-3">
-                                <a href="{{ route('pages.return-policy') }}" class="hover:text-[#45b86f] transition-colors">Terms & Conditions</a>
-                                <span class="text-[9px] font-black uppercase tracking-widest text-gray-500">Legal Info</span>
+                            <li class="sub-item-list">
+                                <a href="{{ route('pages.privacy-policy') }}">Privacy Policy</a>
                             </li>
-                            <li class="hidden md:block">
-                                <a href="{{ route('pages.return-policy') }}" class="hover:text-[#45b86f] transition-colors">Terms & Conditions</a>
+                            <li class="sub-item-list">
+                                <a href="{{ route('pages.return-policy') }}">Cancellation & Return Policy</a>
                             </li>
-
-                            <!-- Privacy Policy -->
-                            <li class="md:hidden flex items-center justify-between border-b border-white/5 pb-3 py-2">
-                                <a href="{{ route('pages.privacy-policy') }}" class="hover:text-[#45b86f] transition-colors">Privacy Policy</a>
-                                <span class="text-[9px] font-black uppercase tracking-widest text-gray-500">Data Secure</span>
+                            <li class="sub-item-list">
+                                <a href="{{ route('pages.faq') }}">FAQs</a>
                             </li>
-                            <li class="hidden md:block">
-                                <a href="{{ route('pages.privacy-policy') }}" class="hover:text-[#45b86f] transition-colors">Privacy Policy</a>
-                            </li>
-
-                            <!-- Cancellation & Return Policy -->
-                            <li class="md:hidden flex items-center justify-between border-b border-white/5 pb-3 py-2">
-                                <a href="{{ route('pages.return-policy') }}" class="hover:text-[#45b86f] transition-colors">Cancellation & Return Policy</a>
-                                <span class="text-[9px] font-black uppercase tracking-widest text-gray-500">Easy Returns</span>
-                            </li>
-                            <li class="hidden md:block">
-                                <a href="{{ route('pages.return-policy') }}" class="hover:text-[#45b86f] transition-colors">Cancellation & Return Policy</a>
-                            </li>
-
-                            <!-- FAQs -->
-                            <li class="md:hidden flex items-center justify-between border-b border-white/5 pb-3 py-2">
-                                <a href="{{ route('pages.faq') }}" class="hover:text-[#45b86f] transition-colors">FAQs</a>
-                                <span class="text-[9px] font-black uppercase tracking-widest text-gray-500">Support Center</span>
-                            </li>
-                            <li class="hidden md:block">
-                                <a href="{{ route('pages.faq') }}" class="hover:text-[#45b86f] transition-colors">FAQs</a>
+                            <li class="sub-item-list">
+                                <a href="{{ route('pages.track-order') }}">Contact Us</a>
                             </li>
                         </ul>
                     </nav>
                 </div>
 
-                <!-- Middle Column: Newsletter & Support -->
-                <div class="hidden md:block col-span-1 lg:-ml-12">
-                    <!-- Call Center -->
-                    <div>
-                        <h3 class="text-[14px] font-black uppercase tracking-widest text-white mb-4 hidden md:block">Contact Us</h3>
-                        <div class="space-y-1 md:mt-14">
-                            <a href="tel:{{ $siteSettings->contact_phone ?? '8801700000000' }}" 
-                               class="text-[20px] font-black text-white hover:text-[#45b86f] transition-colors flex items-center gap-2">
-                                {{ $siteSettings->contact_phone ?? '+880 1700-000000' }}
+                <!-- Middle Column: Newsletter Subscription & Contact Number (50% width) -->
+                <div class="col-span-1 lg:col-span-2 lg:pl-32 xl:pl-44">
+                    <!-- Newsletter Form -->
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #ebebeb !important; font-size: 14px !important; font-weight: 500 !important; margin-bottom: 16px !important; display: flex; align-items: center; gap: 8px;">
+                            <svg style="width: 18px; height: 18px; color: #f7941e !important;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L22 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <span>GET SPECIAL DISCOUNTS IN YOUR INBOX</span>
+                        </h4>
+                        <form action="#" method="POST" style="display: flex !important; align-items: center !important; width: 100% !important; max-width: 450px !important; border-bottom: 1px solid white !important; padding-bottom: 6px !important; margin-bottom: 24px !important;" onsubmit="event.preventDefault(); alert('Subscribed successfully!');">
+                            <input type="email" class="email-submit-input" placeholder="Enter email to get offers, discounts and more." style="background: transparent !important; border: none !important; color: white !important; font-size: 13px !important; width: 100% !important; padding: 6px 0px !important; outline: none !important; box-shadow: none !important; font-family: inherit !important; margin-right: 8px;" required>
+                            <button type="submit" class="mail-subscribe-btn">Subscribe</button>
+                        </form>
+                    </div>
+
+                    <!-- Call Center Details -->
+                    <div style="margin-top: 38px !important; margin-bottom: 30px !important;">
+                        <h4 style="color: #ebebeb !important; font-size: 14px !important; font-weight: 500 !important; margin-bottom: 12px !important; display: flex; align-items: center; gap: 8px;">
+                            <svg style="width: 18px; height: 18px; color: #f7941e !important;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                            </svg>
+                            <span>FOR ANY HELP YOU MAY CALL US AT</span>
+                        </h4>
+                        <div style="line-height: 1.5 !important; margin-left: 0px !important; margin-top: 12px !important;">
+                            <a href="tel:{{ $siteSettings->contact_phone ?? '8801407343794' }}" style="font-size: 20px !important; font-weight: 800 !important; color: white !important; text-decoration: none !important; transition: color 0.2s;" class="hover-orange">
+                                {{ $siteSettings->contact_phone ?? '+880 1407 343794' }}
                             </a>
-                            <p class="text-[12px] text-gray-400 font-medium hidden md:block">Customer Service</p>
-                            <p class="text-[12px] text-gray-500 leading-tight max-w-[280px] hidden md:block">Track your order or get help returning an order on SmartLookBD</p>
+                            <p style="font-size: 12px !important; color: #ebebeb !important; font-weight: 500 !important; margin: 2px 0 1px 0 !important;">Customer Service</p>
+                            <p style="font-size: 11px !important; color: #aaaaaa !important; font-weight: 400 !important; margin: 0 !important;">Track your order or get help returning an order</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column: Social & Widget -->
-                <div class="col-span-1 lg:ml-auto">
-                    @php
-                        $socials = [
-                            ['link' => $siteSettings->facebook_page_link ?? '#', 'icon' => 'M24 12c0-6.627-5.373-12-12-12S0 5.373 0 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12z', 'color' => '#0866FF', 'name' => 'facebook'],
-                            ['link' => $siteSettings->instagram_link ?? '#', 'icon' => 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z', 'color' => '#E4405F', 'name' => 'instagram'],
-                            ['link' => $siteSettings->twitter_link ?? '#', 'icon' => 'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z', 'color' => '#000000', 'name' => 'twitter'],
-                            ['link' => $siteSettings->tiktok_link ?? '#', 'icon' => 'M12.53.02C13.84 0 15.14.01 16.44 0c.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.06-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-3.49 3.03-6.41 6.51-6.58 1.15-.04 2.3.14 3.3.69v4.03c-.61-.31-1.28-.48-1.97-.48-1.79.13-3.08 1.83-2.82 3.59.21 1.34 1.41 2.33 2.7 2.29 1.5-.06 2.44-1.42 2.49-2.88.04-3.75.01-7.49.01-11.24z', 'color' => '#000000', 'name' => 'tiktok']
-                        ];
-                    @endphp
-
-                    <!-- Mobile Social Icons -->
-                    <div class="md:hidden">
-                        <div class="flex flex-wrap justify-center gap-5 mb-8">
-                            @foreach($socials as $soc)
-                                <a href="{{ $soc['link'] }}" target="_blank" 
-                                   class="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-md"
-                                   style="{{ $soc['name'] === 'instagram' ? 'background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);' : 'background-color: ' . $soc['color'] . ';' }} color: white; border: none;">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="{{ $soc['icon'] }}"/>
-                                    </svg>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <!-- PC Follow Us -->
-                    <div class="hidden md:block">
-                        <h4 class="text-[11px] font-black uppercase tracking-[0.15em] text-[#ffde59] mb-6 flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 bg-[#45b86f] rounded-full"></span>
-                            Follow Us
+                <!-- Right Column: Follow Us, FB Page, and App Store Badges (25% width) -->
+                <div class="col-span-1 lg:col-span-1">
+                    <!-- Follow Us Header -->
+                    <div style="margin-bottom: 24px !important;">
+                        <h4 style="color: #ebebeb !important; font-size: 14px !important; font-weight: 500 !important; margin-bottom: 12px !important; display: flex; align-items: center; gap: 8px;">
+                            <svg style="width: 18px; height: 18px; color: #f7941e !important;" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span>FOLLOW US</span>
                         </h4>
-                        <div class="flex flex-wrap gap-5 mb-8">
-                            @foreach($socials as $soc)
-                                <a href="{{ $soc['link'] }}" target="_blank" 
-                                   class="w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110 hover:shadow-lg shadow-sm"
-                                   style="{{ $soc['name'] === 'instagram' ? 'background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);' : 'background-color: ' . $soc['color'] . ';' }} color: white; border: none;">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="{{ $soc['icon'] }}"/>
-                                    </svg>
-                                </a>
-                            @endforeach
+                        <p style="font-size: 13px !important; color: #ebebeb !important; font-weight: 500 !important; line-height: 1.5 !important; margin-bottom: 16px !important;">
+                            Stay updated on our latest arrivals, exclusive promotions and events.
+                        </p>
+                        
+                        <!-- Social Media Icons (Simple, White, Replicating Fabrilife's exact 6) -->
+                        <div class="footer-social" aria-label="Follow Bazario on social" style="display: flex; gap: 20px; align-items: center; justify-content: flex-start; margin-top: 16px; margin-bottom: 16px;">
+                          <a class="social" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/instagram.svg" alt="" />
+                          </a>
+                          <a class="social" href="#" target="_blank" rel="noopener" aria-label="TikTok">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/tiktok.svg" alt="" />
+                          </a>
+                          <a class="social" href="{{ $siteSettings->facebook_page_link ?? 'https://www.facebook.com/Smartlookbdpersonal' }}" target="_blank" rel="noopener" aria-label="Facebook">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/facebook.svg" alt="" />
+                          </a>
+                          <a class="social" href="#" target="_blank" rel="noopener" aria-label="X (Twitter)">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/x.svg" alt="" />
+                          </a>
+                          <a class="social" href="#" target="_blank" rel="noopener" aria-label="Pinterest">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/pinterest.svg" alt="" />
+                          </a>
+                          <a class="social" href="#" target="_blank" rel="noopener" aria-label="YouTube">
+                            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v13/icons/youtube.svg" alt="" />
+                          </a>
                         </div>
                     </div>
 
-                    <!-- Facebook Floating Mini Widget -->
-                    <div class="mb-8 overflow-hidden rounded-xl border border-white/5 bg-white/5 p-4 shadow-xl backdrop-blur-sm group">
-                        <div class="flex items-center gap-4">
-                            <div class="relative flex-shrink-0" style="width: 38px; height: 38px;">
-                                <div style="width: 38px; height: 38px; background-color: white; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                                     <svg viewBox="0 0 24 24" style="width: 38px; height: 38px; color: #0866FF;" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                     </svg>
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex items-center justify-between mb-0.5">
-                                    <span class="text-[13px] font-black uppercase tracking-tight">{{ $fbPageName ?? 'SmartLookBD' }}</span>
-                                    <a href="{{ $siteSettings->facebook_page_link ?? '#' }}" target="_blank" class="text-[10px] text-white px-3 py-1.5 rounded-[4px] font-black uppercase transition-all shadow-md hover:opacity-90" style="background-color: #1877F2 !important;">Follow</a>
-                                </div>
-                                <p class="text-[10px] text-gray-400 font-bold">11K Followers • 1 Following</p>
-                            </div>
+                    <!-- Custom Facebook Page Widget Card (Perfect Replica) -->
+                    <a class="fb-verify-card" href="{{ $siteSettings->facebook_page_link ?? 'https://www.facebook.com/Smartlookbdpersonal' }}" target="_blank" rel="noopener" style="margin-bottom: 24px;">
+                      <div class="fb-verify-left">
+                        <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M12 2C6.48 2 2 6.48 2 12a10 10 0 0 0 8.44 9.87v-6.99H8.08V12h2.36V9.8c0-2.33 1.38-3.62 3.5-3.62c1.01 0 2.07.18 2.07.18v2.28h-1.17c-1.15 0-1.51.71-1.51 1.44V12h2.57l-.41 2.88h-2.16v6.99A10 10 0 0 0 22 12c0-5.52-4.48-10-10-10"/></svg>
+                      </div>
+                      <div class="fb-verify-right">
+                        <div class="fb-verify-title">
+                          SmartLook
+                          <span class="fb-badge" aria-label="Verified">
+                            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="#1877F2"/><path fill="#fff" d="M10.2 14.6L7.8 12.2l1.1-1.1l1.3 1.3l3.9-3.9l1.1 1.1z"/></svg>
+                          </span>
+                          <div class="fb-verify-subtitle">Follow</div>
                         </div>
-                    </div>
+                        <div class="fb-verify-sub">21K followers <i class="fa fa-circle fb-follow-i" aria-hidden="true"></i> 1 following</div>
+                      </div>
+                    </a>
 
                     <!-- App Badges -->
-                    <div class="flex justify-center gap-3 md:hidden text-center">
-                        <a href="#" class="block hover:scale-105 transition-transform opacity-90 hover:opacity-100">
-                             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store" class="h-9">
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <a href="#" class="no-style-link">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store" style="height: 36px;">
                         </a>
-                        <a href="#" class="block hover:scale-105 transition-transform opacity-90 hover:opacity-100">
-                             <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" class="h-9">
-                        </a>
-                    </div>
-                    
-                    <div class="hidden md:flex gap-3">
-                        <a href="#" class="block hover:scale-105 transition-transform opacity-90 hover:opacity-100">
-                             <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Play Store" class="h-9">
-                        </a>
-                        <a href="#" class="block hover:scale-105 transition-transform opacity-90 hover:opacity-100">
-                             <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" class="h-9">
+                        <a href="#" class="no-style-link">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" style="height: 36px;">
                         </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Footer Bottom Bar -->
-        <div class="border-t border-white/5 bg-black/20 py-8">
-            <div class="max-w-[1440px] mx-auto px-6 text-center space-y-2">
-                <p class="text-[11px] text-gray-500 font-bold tracking-[0.1em] uppercase">
-                    Your order is handled daily with a lot of ❤️ and delivered worldwide!
+        <!-- Footer Bottom Bar (Light grey matching Fabrilife F3F3F3) -->
+        <div style="background-color: #F3F3F3 !important; padding-top: 24px !important; padding-bottom: 24px !important;" class="text-center font-sans">
+            <div class="max-w-[1440px] mx-auto px-6 text-center text-gray-700">
+                <p style="font-size: 13px !important; font-weight: 500 !important; margin-bottom: 8px !important; color: #333333 !important;">
+                    Your order is handled daily with a lot of ❤️️ and delivered worldwide!
                 </p>
-                <p class="text-[11px] text-gray-600 font-medium">
-                    Copyright © {{ date('Y') }} SmartLookBD Limited. All Right Reserved
+                <p style="font-size: 12px !important; color: #888888 !important; margin-bottom: 4px !important;">
+                    Copyright © 2018-{{ date('Y') }} Bazario Limited. All Right Reserved
+                </p>
+                <p style="font-size: 11px !important; color: #aaaaaa !important; margin: 0 !important;">
+                    Develop by <a href="https://www.facebook.com/fmoweb0" target="_blank" style="color: #666666 !important; text-decoration: underline !important;" class="hover:text-black">FMOWEB</a>
                 </p>
             </div>
         </div>
@@ -1754,9 +1926,8 @@ window.smartBuyNow = function(productId, quantity = 1, color = '', size = '') {
         <!-- Drawer Header -->
         <div class="flex items-center justify-between px-6 pb-10 flex-shrink-0 relative overflow-hidden" style="background-color: #FFFFFF !important; padding-top: 40px !important;">
             <div class="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-[#45b86f] to-[#00f2fe]"></div>
-            <a href="{{ route('home') }}" class="flex items-center gap-2">
-                <img src="{{ asset('final logo.jpeg') }}" class="h-8 w-auto object-contain" alt="Logo">
-                <span class="brand-logo-font text-xl font-black tracking-tight text-[#1a1a1a]">SmartLook<span class="text-[#45b86f]">BD</span></span>
+            <a href="{{ route('home') }}" class="flex items-center">
+                <img src="{{ asset('Bazario-logo.png') }}" class="h-14 w-auto object-contain" alt="Logo">
             </a>
             <button type="button" @click="toggle()" class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-500 transition-all active:scale-90">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>

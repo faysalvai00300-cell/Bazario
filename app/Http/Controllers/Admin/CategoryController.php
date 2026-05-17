@@ -22,7 +22,7 @@ class CategoryController extends Controller
             $query->where('target_page', $request->target_page);
         }
 
-        $categories = $query->orderBy('sort_order')->get();
+        $categories = $query->orderBy('target_box')->orderBy('sort_order')->get();
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -37,7 +37,15 @@ class CategoryController extends Controller
             });
 
         $categories = Category::all();
-        return view('admin.categories.create', compact('occupiedBoxes', 'categories'));
+        $allProducts = \App\Models\Product::select('id', 'name', 'sku', 'thumbnail')->get()->map(function($p) {
+            return [
+                'id' => $p->id,
+                'name' => $p->name,
+                'sku' => $p->sku,
+                'thumbnail' => $p->thumbnail_url
+            ];
+        });
+        return view('admin.categories.create', compact('occupiedBoxes', 'categories', 'allProducts'));
     }
 
     public function store(Request $request)
@@ -74,7 +82,12 @@ class CategoryController extends Controller
             $data['view_all_image'] = $request->file('view_all_image')->store('categories', 'public');
         }
 
-        Category::create($data);
+        $category = Category::create($data);
+        
+        if ($request->has('linked_product_ids')) {
+            $category->linkedProducts()->sync($request->linked_product_ids);
+        }
+
         return redirect()->route('admin.categories.index', $request->target_page ? ['target_page' => $request->target_page] : [])->with('success', 'Category created!');
     }
 
@@ -89,7 +102,16 @@ class CategoryController extends Controller
             });
 
         $categories = Category::where('id', '!=', $category->id)->get();
-        return view('admin.categories.edit', compact('category', 'occupiedBoxes', 'categories'));
+        $allProducts = \App\Models\Product::select('id', 'name', 'sku', 'thumbnail')->get()->map(function($p) {
+            return [
+                'id' => $p->id,
+                'name' => $p->name,
+                'sku' => $p->sku,
+                'thumbnail' => $p->thumbnail_url
+            ];
+        });
+        $category->load('linkedProducts');
+        return view('admin.categories.edit', compact('category', 'occupiedBoxes', 'categories', 'allProducts'));
     }
 
     public function update(Request $request, Category $category)
@@ -132,6 +154,13 @@ class CategoryController extends Controller
         }
 
         $category->update($data);
+
+        if ($request->has('linked_product_ids')) {
+            $category->linkedProducts()->sync($request->linked_product_ids);
+        } else {
+            $category->linkedProducts()->sync([]);
+        }
+
         return redirect()->route('admin.categories.index', $request->target_page ? ['target_page' => $request->target_page] : [])->with('success', 'Category updated!');
     }
 

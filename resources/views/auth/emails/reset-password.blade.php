@@ -17,7 +17,7 @@
         <a href="{{ route('password.reset', ['token' => $token, 'email' => $email]) }}" class="button">Reset Password</a>
         <p>This password reset link will expire in 60 minutes.</p>
         <p>If you did not request a password reset, no further action is required.</p>
-        <p>Regards,<br>SmartLookBD Team</p>
+        <p>Regards,<br>Bazario Team</p>
         <div class="footer">
             If you're having trouble clicking the "Reset Password" button, copy and paste the URL below into your web browser: <br>
             {{ route('password.reset', ['token' => $token, 'email' => $email]) }}

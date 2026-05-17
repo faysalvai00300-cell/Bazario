@@ -93,7 +93,12 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Buying Price *</label>
+                        <input type="number" name="buying_price" value="{{ old('buying_price', $product->buying_price) }}" required min="0" step="0.01"
+                            class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
+                    </div>
                     <div>
                         <label class="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Regular Price *</label>
                         <input type="number" name="price" value="{{ old('price', $product->price) }}" required step="0.01" placeholder="0.00"
@@ -272,11 +277,19 @@
                         </label>
 
                         <label class="flex gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition items-start dark:border-gray-700 dark:hover:bg-gray-700/50">
-                            <input type="hidden" name="is_mega_deal" value="0">
-                            <input type="checkbox" name="is_mega_deal" value="1" x-model="is_mega_deal" class="rounded text-orange-500 focus:ring-orange-500 w-5 h-5 mt-0.5 dark:bg-gray-900 dark:border-gray-700">
+                            <input type="hidden" name="is_top_sell" value="0">
+                            <input type="checkbox" name="is_top_sell" value="1" {{ old('is_top_sell', $product->is_top_sell) ? 'checked' : '' }} class="rounded text-orange-500 focus:ring-orange-500 w-5 h-5 mt-0.5 dark:bg-gray-900 dark:border-gray-700">
                             <div>
                                 <span class="text-sm font-medium text-gray-900 block dark:text-white">Top Selling</span>
                                 <span class="text-xs text-gray-500 block dark:text-gray-400">Show in Top Selling section</span>
+                            </div>
+                        </label>
+                        <label class="flex gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition items-start dark:border-gray-700 dark:hover:bg-gray-700/50">
+                            <input type="hidden" name="is_mega_deal" value="0">
+                            <input type="checkbox" name="is_mega_deal" value="1" x-model="is_mega_deal" class="rounded text-orange-500 focus:ring-orange-500 w-5 h-5 mt-0.5 dark:bg-gray-900 dark:border-gray-700">
+                            <div>
+                                <span class="text-sm font-medium text-gray-900 block dark:text-white">Mega Deal</span>
+                                <span class="text-xs text-gray-500 block dark:text-gray-400">Apply special deal effects</span>
                                 <div class="mt-2" x-show="is_mega_deal" x-cloak>
                                     <label class="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Animation Effect</label>
                                     <select name="mega_deal_effect" class="w-full border border-gray-200 rounded-lg px-2 py-1 text-[11px] focus:ring-1 focus:ring-orange-400 dark:bg-gray-900 dark:border-gray-700 dark:text-white">

@@ -14,7 +14,7 @@ class SettingSeeder extends Seeder
     {
         $setting = Setting::first() ?? new Setting();
 
-        $setting->site_name = $setting->site_name ?? 'SmartLookBD';
+        $setting->site_name = $setting->site_name ?? 'Bazario';
         
         // Force set SMS Defaults
         $setting->sms_api_url = 'http://bulksmsbd.net/api/smsapi?api_key=[KEY]&type=text&number=[TO]&senderid=[SENDER]&message=[MESSAGE]';

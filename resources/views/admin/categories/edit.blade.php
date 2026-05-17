@@ -180,6 +180,80 @@
         </div>
     </div>
 
+    <!-- Linked Products Selection -->
+    <div x-data="linkedProductsHandler()" class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <h3 class="text-sm font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <i data-lucide="link" class="w-4 h-4"></i> Linked Products (Many-to-Many)
+        </h3>
+
+        <!-- Search Input -->
+        <div class="relative mb-6 max-w-2xl">
+            <label class="text-xs font-medium text-gray-500 mb-1.5 block">SEARCH PRODUCTS TO LINK</label>
+            <div class="flex items-center border border-gray-300 dark:border-gray-700 rounded-none bg-white dark:bg-gray-900 px-4 py-2.5 focus-within:ring-1 focus-within:ring-orange-400">
+                <i data-lucide="search" class="w-4 h-4 text-gray-400 mr-2"></i>
+                <input type="text" x-model="search" @input.debounce.300ms="filterProducts" placeholder="Search products by name or SKU..." class="w-full text-sm bg-transparent border-none focus:ring-0 p-0 dark:text-white">
+            </div>
+
+            <!-- Search Results Dropdown -->
+            <div x-show="search.length > 1 && filteredResults.length > 0" 
+                 class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-2xl max-h-80 overflow-y-auto"
+                 @click.away="filteredResults = []">
+                <template x-for="product in filteredResults" :key="product.id">
+                    <div @click="selectProduct(product)" class="flex items-center gap-3 p-3 hover:bg-orange-50 dark:hover:bg-orange-900/20 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-0 group">
+                        <img :src="product.thumbnail" class="w-12 h-12 object-cover border border-gray-200 dark:border-gray-600">
+                        <div class="flex-1">
+                            <p class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-orange-600" x-text="product.name"></p>
+                            <p class="text-xs text-gray-500" x-text="'SKU: ' + product.sku"></p>
+                        </div>
+                        <i data-lucide="plus-circle" class="w-5 h-5 text-gray-300 group-hover:text-orange-500"></i>
+                    </div>
+                </template>
+            </div>
+            <div x-show="search.length > 1 && filteredResults.length === 0" class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 text-center text-gray-500 text-sm">
+                No products found matching "<span x-text="search" class="font-bold"></span>"
+            </div>
+        </div>
+
+        <!-- Selected Products Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
+            <template x-for="product in selectedProducts" :key="product.id">
+                <div class="relative group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-2 shadow-sm hover:border-orange-300 transition-colors">
+                    <div class="aspect-square mb-2 relative overflow-hidden bg-gray-50">
+                        <img :src="product.thumbnail" @click="imagePreview = product.thumbnail" class="w-full h-full object-cover cursor-zoom-in">
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-900 dark:text-white truncate" x-text="product.name"></p>
+                    <p class="text-[10px] text-gray-500" x-text="product.sku"></p>
+                    
+                    <button type="button" @click="removeProduct(product.id)" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                        <i data-lucide="x" class="w-3 h-3"></i>
+                    </button>
+                    
+                    <input type="hidden" name="linked_product_ids[]" :value="product.id">
+                </div>
+            </template>
+            <div x-show="selectedProducts.length === 0" class="col-span-full py-8 text-center border-2 border-dashed border-gray-200 dark:border-gray-700 text-gray-400 text-sm">
+                No products linked yet. Search above to add products.
+            </div>
+        </div>
+
+        <!-- Image Preview Modal -->
+        <div x-show="imagePreview" 
+             class="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4" 
+             x-transition:enter="transition ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @keydown.escape.window="imagePreview = null" 
+             x-cloak>
+            <button type="button" @click="imagePreview = null" class="absolute top-6 right-6 text-white/50 hover:text-white transition-colors">
+                <i data-lucide="x" class="w-10 h-10"></i>
+            </button>
+            <img :src="imagePreview" class="max-w-full max-h-full object-contain shadow-2xl ring-1 ring-white/10" @click.away="imagePreview = null">
+        </div>
+    </div>
+
     <!-- Bottom Action Button -->
     <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 flex justify-end">
         <button type="submit" class="bg-[#FF6A00] hover:bg-[#FF7A1A] text-white px-12 py-3 rounded-none font-bold transition-all shadow-lg shadow-orange-500/20 flex items-center gap-2 transform active:scale-95 text-sm">
@@ -301,6 +375,47 @@
         targetPageSelect.addEventListener('change', updateBoxOptions);
     }
     updateBoxOptions();
+
+    function linkedProductsHandler() {
+        const productsEl = document.getElementById('all-products-json');
+        const allProducts = productsEl ? JSON.parse(productsEl.textContent) : [];
+        const initialSelectedIds = @json($category->linkedProducts->pluck('id'));
+        
+        return {
+            search: '',
+            allProducts: allProducts,
+            selectedProducts: allProducts.filter(p => initialSelectedIds.includes(p.id)),
+            filteredResults: [],
+            imagePreview: null,
+            
+            filterProducts() {
+                if (this.search.length < 2) {
+                    this.filteredResults = [];
+                    return;
+                }
+                const s = this.search.toLowerCase();
+                this.filteredResults = this.allProducts.filter(p => 
+                    (p.name.toLowerCase().includes(s) || p.sku.toLowerCase().includes(s)) &&
+                    !this.selectedProducts.find(sp => sp.id === p.id)
+                ).slice(0, 15);
+            },
+            
+            selectProduct(product) {
+                this.selectedProducts.push(product);
+                this.search = '';
+                this.filteredResults = [];
+                // Re-initialize lucide icons for newly added elements if necessary
+                setTimeout(() => { if(typeof lucide !== 'undefined') lucide.createIcons(); }, 10);
+            },
+            
+            removeProduct(id) {
+                this.selectedProducts = this.selectedProducts.filter(p => p.id !== id);
+            }
+        }
+    }
+</script>
+<script type="application/json" id="all-products-json">
+    @json($allProducts)
 </script>
 @endpush
 @endsection

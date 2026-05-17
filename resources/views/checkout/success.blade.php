@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Order Confirmed - SmartLookBD')
+@section('title', 'Order Confirmed - Bazario')
 @section('content')
 <div class="max-w-2xl mx-auto px-4 sm:px-6 pt-4 pb-12 sm:py-12 text-center">
     <div class="bg-white shadow-xl border border-green-100 p-8 sm:p-12 transition-all duration-300" style="border-radius: 9px;" data-aos="fade-up">
@@ -54,7 +54,7 @@
 
         <!-- Home Action -->
         <div class="mt-8 border-t border-gray-100 pt-8">
-            <p class="text-[11px] text-gray-500 font-bold uppercase tracking-widest">Thank you for choosing SmartLookBD.</p>
+            <p class="text-[11px] text-gray-500 font-bold uppercase tracking-widest">Thank you for choosing Bazario.</p>
         </div>
     </div>
 </div>

@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'About Us - SmartLookBD')
+@section('title', 'About Us - Bazario')
 @section('content')
 <div class="max-w-4xl mx-auto px-4 py-16">
     <div class="text-center mb-12">
-        <h1 class="text-3xl md:text-5xl font-black text-gray-900 mb-4">About <span class="text-[#FF6A00]">SmartLookBD</span></h1>
+        <h1 class="text-3xl md:text-5xl font-black text-gray-900 mb-4">About <span class="text-[#FF6A00]">Bazario</span></h1>
         <p class="text-gray-500 text-lg max-w-2xl mx-auto">Your trusted online shopping destination for premium products at unbeatable prices.</p>
     </div>
     
@@ -11,7 +11,7 @@
         <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div>
                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Our Mission</h2>
-                <p class="text-gray-600 leading-relaxed mb-6">At SmartLookBD, our mission is simple: to provide high-quality, premium products to customers all over Bangladesh with the most seamless and trustworthy shopping experience possible. We believe that shopping online should be fast, secure, and enjoyable.</p>
+                <p class="text-gray-600 leading-relaxed mb-6">At Bazario, our mission is simple: to provide high-quality, premium products to customers all over Bangladesh with the most seamless and trustworthy shopping experience possible. We believe that shopping online should be fast, secure, and enjoyable.</p>
                 <p class="text-gray-600 leading-relaxed">Whether you are looking for the latest electronics, trendy fashion accessories, or everyday essentials, we carefully curate our inventory to ensure you get the best value for your money.</p>
             </div>
             <div class="bg-orange-50 rounded-2xl p-8 border border-orange-100 text-center">

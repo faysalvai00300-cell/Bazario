@@ -2,15 +2,112 @@
 @import "aos/dist/aos.css";
 
 @theme {
-    --color-primary: #333333;
-    --color-accent: #45b86f;
-    --color-accent-hover: #3ba35f;
+    --color-primary: #222222;
+    --color-accent: #222222;
+    --color-accent-hover: #111111;
     --color-bg: #FFFFFF;
-    --color-card: #FDECEC;
-    --color-text: #333333;
-    --color-muted: #6B7280;
+    --color-card: #F8F9FA;
+    --color-text: #373A3C;
+    --color-muted: #888888;
+    --color-sale: #FF3F6C;
+    --color-success: #2BB673;
 
     --font-inter: 'Inter', sans-serif;
+
+    /* Full color palette from CSS Peeper */
+    --color-c-111111: #111111;
+    --color-c-222222: #222222;
+    --color-c-282828: #282828;
+    --color-c-333333: #333333;
+    --color-c-348934: #348934;
+    --color-c-374151: #374151;
+    --color-c-444444: #444444;
+    --color-c-484848: #484848;
+    --color-c-535766: #535766;
+    --color-c-666666: #666666;
+    --color-c-808080: #808080;
+    --color-c-888888: #888888;
+    --color-c-999999: #999999;
+    --color-c-000000: #000000;
+    --color-c-007BFF: #007BFF;
+    --color-c-7C3AED: #7C3AED;
+    --color-c-818A91: #818A91;
+    --color-c-94969F: #94969F;
+    --color-c-A7F3D0: #A7F3D0;
+    --color-c-AAAAAA: #AAAAAA;
+    --color-c-BFDBFE: #BFDBFE;
+    --color-c-C2185B: #C2185B;
+    --color-c-D9534F: #D9534F;
+    --color-c-DB2777: #DB2777;
+    --color-c-DC2626: #DC2626;
+    --color-c-DDD6FE: #DDD6FE;
+    --color-c-DDDDDD: #DDDDDD;
+    --color-c-E0E0E0: #E0E0E0;
+    --color-c-E3F2FD: #E3F2FD;
+    --color-c-E5E5E5: #E5E5E5;
+    --color-c-E5E7EB: #E5E7EB;
+    --color-c-E74C3C: #E74C3C;
+    --color-c-E8E8E8: #E8E8E8;
+    --color-c-E8F5E9: #E8F5E9;
+    --color-c-EAB308: #EAB308;
+    --color-c-EAEAEC: #EAEAEC;
+    --color-c-EAF1FF: #EAF1FF;
+    --color-c-EBEBEB: #EBEBEB;
+    --color-c-ECEEEF: #ECEEEF;
+    --color-c-ECFDF5: #ECFDF5;
+    --color-c-EC4899: #EC4899;
+    --color-c-EEEEEE: #EEEEEE;
+    --color-c-EE5F73: #EE5F73;
+    --color-c-EFEFEF: #EFEFEF;
+    --color-c-EFF6FF: #EFF6FF;
+    --color-c-1877F2: #1877F2;
+    --color-c-F0AD4E: #F0AD4E;
+    --color-c-F0F4FF: #F0F4FF;
+    --color-c-F0F9FF: #F0F9FF;
+    --color-c-F3F3F3: #F3F3F3;
+    --color-c-F57C00: #F57C00;
+    --color-c-F5F3FF: #F5F3FF;
+    --color-c-F5F5F5: #F5F5F5;
+    --color-c-F5F5F6: #F5F5F6;
+    --color-c-F7941E: #F7941E;
+    --color-c-F7F7F7: #F7F7F7;
+    --color-c-F8F9FA: #F8F9FA;
+    --color-c-F97316: #F97316;
+    --color-c-F9FAFB: #F9FAFB;
+    --color-c-1976D2: #1976D2;
+    --color-c-FAFAFA: #FAFAFA;
+    --color-c-FBC02D: #FBC02D;
+    --color-c-FBCFE8: #FBCFE8;
+    --color-c-FB56C1: #FB56C1;
+    --color-c-FCE4EC: #FCE4EC;
+    --color-c-FDF2F8: #FDF2F8;
+    --color-c-FEF9E7: #FEF9E7;
+    --color-c-FFA502: #FFA502;
+    --color-c-FFF3E0: #FFF3E0;
+    --color-c-FFF8E1: #FFF8E1;
+    --color-c-FFFFFF: #FFFFFF;
+    --color-c-FF3F6C: #FF3F6C;
+    --color-c-FF4757: #FF4757;
+    --color-c-1F2937: #1F2937;
+    --color-c-2196F3: #2196F3;
+    --color-c-22C55E: #22C55E;
+    --color-c-222F3F: #222F3F;
+    --color-c-2563EB: #2563EB;
+    --color-c-2874F0: #2874F0;
+    --color-c-282C3F: #282C3F;
+    --color-c-2BB673: #2BB673;
+    --color-c-2ED573: #2ED573;
+    --color-c-059669: #059669;
+    --color-c-3498DB: #3498DB;
+    --color-c-373A3C: #373A3C;
+    --color-c-388E3C: #388E3C;
+    --color-c-3B82F6: #3B82F6;
+    --color-c-4B5563: #4B5563;
+    --color-c-55595C: #55595C;
+    --color-c-58595B: #58595B;
+    --color-c-5BC0DE: #5BC0DE;
+    --color-c-6366F1: #6366F1;
+    --color-c-EAEAEA: #EAEAEA;
 }
 
 @layer base {
@@ -89,25 +186,25 @@
 
     /* Buttons */
     .btn-primary {
-        background: linear-gradient(135deg, #45b86f, #3ba35f);
+        background: #222222;
         color: white;
         transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
     .btn-primary:hover {
         transform: scale(1.05);
-        box-shadow: 0 8px 25px rgba(69, 184, 111, 0.4);
-        background: linear-gradient(135deg, #3ba35f, #45b86f);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        background: #111111;
     }
 
     .btn-outline {
-        border: 2px solid #45b86f;
-        color: #45b86f;
+        border: 2px solid #222222;
+        color: #222222;
         transition: all 0.2s ease;
     }
 
     .btn-outline:hover {
-        background: #45b86f;
+        background: #222222;
         color: white;
         transform: scale(1.05);
     }
@@ -134,11 +231,11 @@
 
     /* Flash Sale */
     .flash-sale-timer {
-        background: linear-gradient(135deg, #45b86f, #3ba35f);
+        background: #222222;
     }
 
     .countdown-box {
-        background: #111827;
+        background: #111111;
         color: white;
         border-radius: 6px;
         min-width: 44px;
@@ -148,12 +245,12 @@
 
     /* Star Rating */
     .stars {
-        color: #FBBF24;
+        color: #FBC02D;
     }
 
     /* Discount Badge */
     .discount-badge {
-        background: linear-gradient(135deg, #45b86f, #2ecc71);
+        background: #FF3F6C;
         color: white;
     }
 
@@ -169,7 +266,7 @@
 
     /* Review Card */
     .review-card {
-        border-left: 4px solid #45b86f;
+        border-left: 4px solid #222222;
         transition: transform 0.3s ease;
     }
 
@@ -180,23 +277,23 @@
 
 @layer utilities {
     .text-accent {
-        color: #45b86f;
+        color: #222222;
     }
 
     .bg-accent {
-        background-color: #45b86f;
+        background-color: #222222;
     }
 
     .bg-primary {
-        background-color: #111827;
+        background-color: #FFFFFF;
     }
 
     .border-accent {
-        border-color: #45b86f;
+        border-color: #222222;
     }
 
     .gradient-accent {
-        background: linear-gradient(135deg, #45b86f, #3ba35f);
+        background: #222222;
     }
 
     .parallax-banner {
@@ -209,7 +306,7 @@
 /* Swiper Customization */
 .swiper-button-next,
 .swiper-button-prev {
-    color: #45b86f !important;
+    color: #222222 !important;
     background: white;
     padding: 24px;
     border-radius: 50%;
@@ -217,7 +314,7 @@
 }
 
 .swiper-pagination-bullet-active {
-    background: #45b86f !important;
+    background: #222222 !important;
 }
 
 /* Custom Scrollbar */
@@ -226,18 +323,18 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: #F9FAFB;
+    background: #F8F9FA;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #45b86f;
+    background: #222222;
     border-radius: 3px;
 }
 
 /* LoadingSpinner */
 .loader {
     border: 3px solid #f3f4f6;
-    border-top: 3px solid #45b86f;
+    border-top: 3px solid #222222;
     border-radius: 50%;
     width: 24px;
     height: 24px;

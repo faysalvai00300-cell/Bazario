@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Checkout - SmartLookBD')
+@section('title', 'Checkout - Bazario')
 @section('body_bg', '#f9fafb')
 @section('content')
     <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 bg-[#f9fafb]" x-data="checkoutData">
@@ -55,7 +55,7 @@
                                             <div>
                                                 <p class="text-[11px] font-bold text-gray-900">Use Your Saved Address</p>
                                                 <p class="text-[10px] text-gray-500 truncate"
-                                                    x-text="JSON.parse(localStorage.getItem('smartlook_address')).name"></p>
+                                                    x-text="JSON.parse(localStorage.getItem('Bazario_address')).name"></p>
                                             </div>
                                             <div class="ml-auto">
                                                 <span
@@ -358,14 +358,14 @@
                 },
 
                 checkSavedAddress() {
-                    const saved = localStorage.getItem('smartlook_address');
+                    const saved = localStorage.getItem('Bazario_address');
                     if (saved) {
                         this.hasSavedAddress = true;
                     }
                 },
 
                 loadSavedAddress() {
-                    const saved = JSON.parse(localStorage.getItem('smartlook_address'));
+                    const saved = JSON.parse(localStorage.getItem('Bazario_address'));
                     if (saved) {
                         // Set text fields
                         document.getElementsByName('name')[0].value = saved.name || '';
@@ -399,12 +399,12 @@
                             area: this.area,
                             address: document.getElementsByName('address')[0].value
                         };
-                        localStorage.setItem('smartlook_address', JSON.stringify(data));
+                        localStorage.setItem('Bazario_address', JSON.stringify(data));
                     }
                 },
 
                 deleteSavedAddress() {
-                    localStorage.removeItem('smartlook_address');
+                    localStorage.removeItem('Bazario_address');
                     this.hasSavedAddress = false;
                 },
                 updateTotals() {

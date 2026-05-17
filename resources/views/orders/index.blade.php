@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Orders - SmartLookBD')
+@section('title', 'My Orders - Bazario')
 
 @section('content')
 <div class="bg-[#F9FAFB] min-h-screen py-6 md:py-10">

@@ -114,7 +114,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/dashboard', [\App\Http\Controllers\AuthController::class, 'dashboard'])->name('account.dashboard');
 });
 
-Route::prefix('199/admin-smartlookbd-access')->name('admin.')->group(function() {
+Route::prefix('admin')->name('admin.')->group(function() {
     // Admin Auth
     Route::get('/', function() {
         return redirect()->route('admin.loginform');
@@ -138,12 +138,21 @@ Route::prefix('199/admin-smartlookbd-access')->name('admin.')->group(function() 
 
         Route::resource('/products', \App\Http\Controllers\Admin\ProductController::class);
         Route::post('/products-bulk-delete', [\App\Http\Controllers\Admin\ProductController::class, 'bulkDestroy'])->name('products.bulk-delete');
+        Route::post('/products/{id}/toggle-status', [\App\Http\Controllers\Admin\ProductController::class, 'toggleStatus'])->name('products.toggle-status');
         Route::delete('/products/images/{productImage}', [\App\Http\Controllers\Admin\ProductController::class, 'destroyImage'])->name('products.images.destroy');
         Route::resource('/categories', \App\Http\Controllers\Admin\CategoryController::class);
         Route::resource('/orders', \App\Http\Controllers\Admin\OrderController::class);
+        Route::post('/orders-bulk-delete', [\App\Http\Controllers\Admin\OrderController::class, 'bulkDestroy'])->name('orders.bulk-delete');
+        Route::post('/orders-bulk-status', [\App\Http\Controllers\Admin\OrderController::class, 'bulkUpdateStatus'])->name('orders.bulk-status');
+        Route::post('/orders-bulk-courier', [\App\Http\Controllers\Admin\OrderController::class, 'bulkSendToCourier'])->name('orders.bulk-courier');
+        Route::get('/orders-bulk-invoices', [\App\Http\Controllers\Admin\OrderController::class, 'bulkPrintInvoices'])->name('orders.bulk-invoices');
+        Route::get('/orders-bulk-courier', function() { return redirect()->route('admin.orders.index'); });
+        Route::get('/get-courier-locations', [\App\Http\Controllers\Admin\OrderController::class, 'getCourierLocations'])->name('orders.courier-locations');
+        Route::post('/orders/{order}/notes', [\App\Http\Controllers\Admin\OrderController::class, 'updateNotes'])->name('orders.notes-update');
         Route::patch('/orders/{order}/status', [\App\Http\Controllers\Admin\OrderController::class, 'update'])->name('orders.status');
         Route::patch('/orders/{order}/payment-status', [\App\Http\Controllers\Admin\OrderController::class, 'updatePaymentStatus'])->name('orders.update-payment-status');
         Route::post('/orders/{order}/send-to-courier', [\App\Http\Controllers\Admin\OrderController::class, 'sendToCourier'])->name('orders.send-to-courier');
+        Route::get('/orders/{order}/fraud-check', [\App\Http\Controllers\Admin\OrderController::class, 'fraudCheck'])->name('orders.fraud-check');
         Route::patch('/order-items/{item}/update', [\App\Http\Controllers\Admin\OrderController::class, 'updateItem'])->name('order-items.update');
         Route::delete('/order-items/{item}/remove', [\App\Http\Controllers\Admin\OrderController::class, 'removeItem'])->name('order-items.remove');
         Route::resource('/promo-codes', \App\Http\Controllers\Admin\PromoCodeController::class);
@@ -179,6 +188,10 @@ Route::prefix('199/admin-smartlookbd-access')->name('admin.')->group(function() 
         Route::get('/tiktok-pixel', [\App\Http\Controllers\Admin\SettingController::class, 'tiktokPixelIndex'])->name('tiktok-pixel.index');
         Route::post('/tiktok-pixel', [\App\Http\Controllers\Admin\SettingController::class, 'tiktokPixelUpdate'])->name('tiktok-pixel.update');
 
+        // Google Ads
+        Route::get('/google-ads', [\App\Http\Controllers\Admin\SettingController::class, 'googleAdsIndex'])->name('google-ads.index');
+        Route::post('/google-ads', [\App\Http\Controllers\Admin\SettingController::class, 'googleAdsUpdate'])->name('google-ads.update');
+
         // Show Pop Up
         Route::get('/show-popup', [\App\Http\Controllers\Admin\SettingController::class, 'popupIndex'])->name('popup.index');
         Route::post('/show-popup', [\App\Http\Controllers\Admin\SettingController::class, 'popupUpdate'])->name('popup.update');
@@ -212,6 +225,9 @@ Route::prefix('199/admin-smartlookbd-access')->name('admin.')->group(function() 
         // Payment Gateway Settings
         Route::get('/settings/payment', [\App\Http\Controllers\Admin\SettingController::class, 'paymentIndex'])->name('settings.payment.index');
         Route::put('/settings/payment', [\App\Http\Controllers\Admin\SettingController::class, 'paymentUpdate'])->name('settings.payment.update');
+
+        // Ads Analytics
+        Route::get('/ads-analytics', [\App\Http\Controllers\Admin\MarketingController::class, 'adsAnalytics'])->name('ads-analytics.index');
 
         // Sales Report
         Route::get('/sales', [\App\Http\Controllers\Admin\SalesController::class, 'index'])->name('sales.index');

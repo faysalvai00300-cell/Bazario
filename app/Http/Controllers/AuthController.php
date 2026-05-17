@@ -223,7 +223,7 @@ class AuthController extends Controller
         } else {
             $settings = \App\Models\Setting::first();
             if ($settings && $settings->is_sms_active && !empty($settings->sms_api_url)) {
-                $smsMessage = "Your SmartLookBD verification code is: {$otp}";
+                $smsMessage = "Your Bazario verification code is: {$otp}";
                 $apiUrl = str_replace(
                     ['[USER]', '[TO]', '[MESSAGE]', '[KEY]', '[SENDER]'],
                     [urlencode($settings->sms_username ?? ''), urlencode($identity), urlencode($smsMessage), urlencode($settings->sms_api_key ?? ''), urlencode($settings->sms_sender_id ?? '')],

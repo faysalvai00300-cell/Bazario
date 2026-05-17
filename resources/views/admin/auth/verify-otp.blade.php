@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify Code - SmartLookBD Admin</title>
+    <title>Verify Code - Bazario Admin</title>
     <meta name="robots" content="noindex, nofollow">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -18,7 +18,7 @@
         <!-- Logo Header -->
         <div class="text-center mb-8">
             <div class="inline-flex items-center justify-center mb-4">
-                <img src="{{ asset('final logo.jpeg') }}" alt="SmartLookBD" class="w-16 h-16 rounded-2xl shadow-lg shadow-orange-500/30 object-cover">
+                <img src="{{ asset('Bazario-logo.png') }}" alt="Bazario" class="w-16 h-16 rounded-2xl shadow-lg shadow-orange-500/30 object-cover">
             </div>
             <h1 class="text-2xl font-bold text-white">Verify Reset Code</h1>
             <p class="text-slate-400 text-sm mt-1">We've sent a 6-digit code to <span class="text-white font-semibold">{{ $identity }}</span></p>

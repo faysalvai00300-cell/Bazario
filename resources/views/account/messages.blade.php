@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Inbox - SmartLookBD')
+@section('title', 'Inbox - Bazario')
 
 @section('content')
 <style>
@@ -530,7 +530,7 @@
                             <div class="mb-4 pb-3 border-b border-gray-100 flex items-center justify-between">
                                 <div>
                                     <div class="flex items-center gap-1.5 mb-0.5">
-                                        <h5 class="text-black font-black uppercase text-[13px] tracking-[0.15em]">SmartLookBD</h5>
+                                        <h5 class="text-black font-black uppercase text-[13px] tracking-[0.15em]">Bazario</h5>
                                         <!-- Verified Blue Tick -->
                                         <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
@@ -539,7 +539,7 @@
                                     <p class="text-[10px] text-gray-400 font-bold" x-text="selectedMessage ? new Date(selectedMessage.created_at).toLocaleString() : ''"></p>
                                 </div>
                                 <div class="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center">
-                                    <img src="{{ asset('final logo.jpeg') }}" class="w-7 h-7 rounded-full opacity-60" alt="">
+                                    <img src="{{ asset('Bazario-logo.png') }}" class="w-7 h-7 rounded-full opacity-60" alt="">
                                 </div>
                             </div>
                             <div class="text-[16px] text-gray-800 leading-relaxed font-medium whitespace-pre-line max-h-[160px] overflow-y-auto pr-3 custom-scrollbar" 

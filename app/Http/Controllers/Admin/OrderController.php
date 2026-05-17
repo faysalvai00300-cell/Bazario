@@ -48,7 +48,19 @@ class OrderController extends Controller
 
     public function update(Request $request, \App\Models\Order $order, \App\Services\SmsService $smsService, \App\Services\FacebookCapiService $fbCapi)
     {
-        $request->validate(['status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled']);
+        // Status Lockdown Logic
+        if ($order->status === 'delivered') {
+            $request->validate(['status' => 'required|in:delivered,returned,cancelled']);
+            
+            if ($order->status !== $request->status) {
+                $order->update(['status' => $request->status]);
+                return redirect()->route('admin.orders.index')->with('success', 'Order status updated from Delivered!');
+            }
+            
+            return redirect()->route('admin.orders.index')->with('error', 'This order is already delivered and locked.');
+        }
+
+        $request->validate(['status' => 'required|in:pending,confirmed,processing,shipped,delivered,cancelled,returned']);
         
         $oldStatus = $order->status;
         $order->update(['status' => $request->status]);
@@ -84,7 +96,57 @@ class OrderController extends Controller
     public function create() { }
     public function store(Request $request) { }
     public function edit(Order $order) { }
-    public function destroy(Order $order) { }
+    public function destroy(Order $order)
+    {
+        $order->delete();
+        return back()->with('success', 'Order deleted successfully!');
+    }
+
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->ids;
+        if (is_string($ids)) {
+            $ids = json_decode($ids, true);
+        }
+        
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'No orders selected!');
+        }
+        Order::whereIn('id', $ids)->delete();
+        return back()->with('success', count($ids) . ' orders deleted successfully!');
+    }
+
+    public function bulkUpdateStatus(Request $request)
+    {
+        $ids = $request->ids;
+        $status = $request->status;
+        
+        if (is_string($ids)) {
+            $ids = json_decode($ids, true);
+        }
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'No orders selected!');
+        }
+        
+        if (!$status) {
+            return back()->with('error', 'No status selected!');
+        }
+
+        Order::whereIn('id', $ids)->update(['status' => $status]);
+        return back()->with('success', count($ids) . ' orders updated to ' . $status);
+    }
+
+    public function updateNotes(Order $order, Request $request)
+    {
+        $request->validate([
+            'notes' => 'nullable|string',
+            'admin_note' => 'nullable|string',
+        ]);
+
+        $order->update($request->only(['notes', 'admin_note']));
+        return back()->with('success', 'Notes updated successfully!');
+    }
 
     public function sendToCourier(Order $order, Request $request, \App\Services\CourierService $courierService)
     {
@@ -95,6 +157,71 @@ class OrderController extends Controller
         }
         
         return back()->with('error', $result['message']);
+    }
+
+    public function bulkSendToCourier(Request $request, \App\Services\CourierService $courierService)
+    {
+        $ids = $request->ids;
+        $courierType = $request->courier_type;
+        $areaData = $request->except(['ids', 'courier_type', '_token']);
+
+        if (is_string($ids)) {
+            $ids = json_decode($ids, true);
+        }
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'No orders selected!');
+        }
+
+        $successCount = 0;
+        $errors = [];
+
+        foreach ($ids as $id) {
+            $order = Order::find($id);
+            if ($order) {
+                // Pass area data for specific couriers
+                if ($courierType === 'redx') {
+                    $result = $courierService->sendOrder($order, $courierType, $areaData['redx_area_id'] ?? null);
+                } elseif ($courierType === 'pathao') {
+                    $result = $courierService->sendOrder($order, $courierType, $areaData);
+                } else {
+                    $result = $courierService->sendOrder($order, $courierType);
+                }
+
+                if ($result['success']) {
+                    $successCount++;
+                } else {
+                    $errors[] = "Order #{$order->order_number}: {$result['message']}";
+                }
+            }
+        }
+
+        if ($successCount > 0 && count($errors) > 0) {
+            return back()->with('success', "{$successCount} orders sent. Some failed: " . implode(', ', $errors));
+        } elseif ($successCount > 0) {
+            return back()->with('success', "{$successCount} orders sent successfully to " . ucfirst($courierType));
+        } else {
+            return back()->with('error', "Failed to send orders: " . implode(', ', $errors));
+        }
+    }
+
+    public function getCourierLocations(Request $request, \App\Services\CourierService $courierService)
+    {
+        $type = $request->type;
+        if ($type === 'pathao_cities') return response()->json($courierService->getPathaoCities());
+        if ($type === 'pathao_zones') return response()->json($courierService->getPathaoZones($request->city_id));
+        if ($type === 'pathao_areas') return response()->json($courierService->getPathaoAreas($request->zone_id));
+        if ($type === 'redx_areas') return response()->json($courierService->getRedXAreas());
+        
+        return response()->json([]);
+    }
+
+    public function bulkPrintInvoices(Request $request)
+    {
+        $ids = explode(',', $request->ids);
+        $orders = Order::whereIn('id', $ids)->with('items.product')->get();
+        $settings = \App\Models\Setting::first();
+        return view('admin.orders.invoices', compact('orders', 'settings'));
     }
 
     public function updateItem(\App\Models\OrderItem $item, Request $request)
@@ -124,6 +251,12 @@ class OrderController extends Controller
         }
 
         return back()->with('success', 'Item removed from order!');
+    }
+
+    public function fraudCheck(Order $order, \App\Services\CourierService $courierService)
+    {
+        $result = $courierService->checkFraud($order->phone);
+        return response()->json($result);
     }
 
     private function recalculateOrder(Order $order)

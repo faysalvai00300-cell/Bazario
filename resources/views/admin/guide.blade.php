@@ -27,7 +27,7 @@
                     </span>
                 @else
                     @php
-                        $siteName = $siteSettings->site_name ?? 'SmartLookBD';
+                        $siteName = $siteSettings->site_name ?? 'Bazario';
                         $waMessage = "আসসালামু আলাইকুম, আমি {$siteName} ওয়েবসাইট থেকে বলছি। আমি ২৮-০৪-২০২৬ তারিখে সাবস্ক্রিপশন কিনেছিলাম। আমি আরও ১ বছরের জন্য সাপোর্ট রিনিউ করতে চাই।";
                     @endphp
                     <a href="https://wa.me/8801915974832?text={{ urlencode($waMessage) }}" target="_blank"
@@ -244,6 +244,30 @@
                         </li>
                     </ul>
                 </div>
+
+                <!-- GA4 & Server Side Tracking -->
+                <div class="p-6 rounded-2xl border border-orange-50 bg-orange-50/20 dark:bg-gray-900/40 dark:border-orange-900/30 md:col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center dark:bg-orange-900/40 dark:text-orange-400">
+                            <i data-lucide="pie-chart" class="w-6 h-6"></i>
+                        </div>
+                        <h4 class="text-md font-black text-gray-900 dark:text-white uppercase tracking-tight">GA4, Stape & Server-Side Tracking</h4>
+                    </div>
+                    <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+                        <li class="flex gap-2">
+                            <span class="text-orange-500 font-bold">•</span>
+                            <span><b>Browser Side & Server Side:</b> ব্রাউজার এবং সার্ভার সাইড (Dual Tracking) সেটআপের মাধ্যমে কাস্টমার ডেটা হারানো রোধ করা হয়।</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-orange-500 font-bold">•</span>
+                            <span><b>GA4 Setup:</b> Google Analytics 4 (GA4) ব্যবহার করে ওয়েবসাইটের ট্রাফিক, ইভেন্ট এবং সেলসের বিস্তারিত রিপোর্ট নিখুঁতভাবে এনালাইজ করুন।</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <span class="text-orange-500 font-bold">•</span>
+                            <span><b>Stape & Custom Domain:</b> First Party Data Collection-এর জন্য Stape এবং Custom Domain সেটআপ করা হয়, যা অ্যাড ব্লকার বাইপাস করে ১০০% ট্র্যাকিং নিশ্চিত করে।</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -322,6 +346,6 @@
 </div>
 
 <div class="mt-12 text-center pb-8 border-t border-gray-100 dark:border-gray-700 pt-8">
-    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Design & System Logic refined for SmartLookBD Excellence</p>
+    <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest italic">Design & System Logic refined for Bazario Excellence</p>
 </div>
 @endsection

@@ -72,7 +72,7 @@
         </a>
 
         <div style="margin-top: 35px !important; padding-top: 20px !important; border-top: 1px solid #f2f2f2 !important; font-size: 13px !important; color: #333 !important; font-weight: 700 !important; text-transform: none !important; font-family: sans-serif !important;">
-            SmartLookBD Wishlist
+            Bazario Wishlist
         </div>
     </div>
 </div>

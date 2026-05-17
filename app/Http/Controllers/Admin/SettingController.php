@@ -88,9 +88,18 @@ class SettingController extends Controller
         $request->validate([
             'facebook_pixel_id' => 'nullable|string|max:50',
             'facebook_access_token' => 'nullable|string',
+            'facebook_app_id' => 'nullable|string',
+            'facebook_app_secret' => 'nullable|string',
+            'facebook_ad_account_id' => 'nullable|string',
         ]);
 
-        $data = $request->only(['facebook_pixel_id', 'facebook_access_token']);
+        $data = $request->only([
+            'facebook_pixel_id', 
+            'facebook_access_token',
+            'facebook_app_id',
+            'facebook_app_secret',
+            'facebook_ad_account_id'
+        ]);
 
         $settings = Setting::first();
         if (!$settings) {
@@ -127,6 +136,39 @@ class SettingController extends Controller
 
         Cache::forget('site_settings');
         return back()->with('success', 'TikTok Pixel & Events API settings updated successfully.');
+    }
+
+    public function googleAdsIndex()
+    {
+        $settings = Setting::first();
+        return view('admin.settings.google-ads', compact('settings'));
+    }
+
+    public function googleAdsUpdate(Request $request)
+    {
+        $request->validate([
+            'google_ads_client_id' => 'nullable|string',
+            'google_ads_client_secret' => 'nullable|string',
+            'google_ads_developer_token' => 'nullable|string',
+            'google_ads_manager_id' => 'nullable|string|max:50',
+        ]);
+
+        $data = $request->only([
+            'google_ads_client_id', 
+            'google_ads_client_secret', 
+            'google_ads_developer_token', 
+            'google_ads_manager_id'
+        ]);
+
+        $settings = Setting::first();
+        if (!$settings) {
+            Setting::create($data);
+        } else {
+            $settings->update($data);
+        }
+
+        Cache::forget('site_settings');
+        return back()->with('success', 'Google Ads API settings updated successfully.');
     }
 
     public function popupIndex()
@@ -337,7 +379,7 @@ class SettingController extends Controller
         try {
             \Illuminate\Support\Facades\Mail::raw('This is a test email to verify SMTP configuration.', function ($message) use ($settings) {
                 $message->to($settings->smtp_from_address ?? 'test@example.com')
-                        ->subject('SMTP Test - ' . ($settings->site_name ?? 'SmartLookBD'));
+                        ->subject('SMTP Test - ' . ($settings->site_name ?? 'Bazario'));
             });
             return back()->with('success', 'Test email sent successfully to ' . ($settings->smtp_from_address ?? 'your sender email') . '. Check your inbox/spam.');
         } catch (\Exception $e) {
@@ -358,7 +400,7 @@ class SettingController extends Controller
         }
 
         $otp = "123456";
-        $smsMessage = "Your SmartLookBD test verification code is: {$otp}";
+        $smsMessage = "Your Bazario test verification code is: {$otp}";
         
         $apiUrl = str_replace(
             ['[USER]', '[TO]', '[MESSAGE]', '[KEY]', '[SENDER]'],

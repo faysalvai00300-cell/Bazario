@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Register - SmartLookBD')
+@section('title', 'Register - Bazario')
 
 @section('content')
 <div class="fixed inset-0 flex flex-col items-center justify-center bg-white z-[99999] p-6 overflow-y-auto">
@@ -8,11 +8,8 @@
     <div class="w-full max-w-sm bg-[#FDECEC] rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-300 p-8 sm:p-10 flex flex-col auth-card-animate">
         <!-- Logo -->
         <div class="flex items-center justify-center mb-10 text-center">
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                <img src="{{ asset('final logo.jpeg') }}" alt="SmartLookBD Logo" class="h-14 w-auto object-contain">
-                <span class="brand-logo-font text-gray-900 group-hover:text-black transition-all duration-300" style="font-size: 2rem; line-height: 1.2;">
-                    SmartLookBD
-                </span>
+            <a href="{{ route('home') }}" class="flex items-center justify-center group">
+                <img src="{{ asset('Bazario-logo.png') }}" alt="Bazario Logo" class="h-14 w-auto object-contain">
             </a>
         </div>
 

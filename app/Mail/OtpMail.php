@@ -29,8 +29,8 @@ class OtpMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            from: new \Illuminate\Mail\Mailables\Address('otp@smartlookbd.com', 'SmartLookBD'),
-            subject: 'Your Login OTP - SmartLookBD',
+            from: new \Illuminate\Mail\Mailables\Address('otp@Bazario.com', 'Bazario'),
+            subject: 'Your Login OTP - Bazario',
         );
     }
 

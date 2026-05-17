@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Denied - SmartLookBD</title>
+    <title>Access Denied - Bazario</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
@@ -38,14 +38,14 @@
 
         <div class="pt-8 border-t border-slate-800 flex flex-col items-center gap-6">
             <p class="text-slate-500 text-sm italic">If you believe this is an error, please contact our support team.</p>
-            <a href="mailto:support@smartlookbd.com" class="px-8 py-3 bg-white text-slate-900 font-bold hover:bg-red-500 hover:text-white transition-all transform hover:scale-105 active:scale-95 duration-300 uppercase tracking-widest text-xs">
+            <a href="mailto:support@bazario.com" class="px-8 py-3 bg-white text-slate-900 font-bold hover:bg-red-500 hover:text-white transition-all transform hover:scale-105 active:scale-95 duration-300 uppercase tracking-widest text-xs">
                 Email Support
             </a>
         </div>
 
         <div class="pt-10">
             <div class="brand-logo-font text-2xl font-black text-slate-400">
-                SmartLook<span class="text-red-500">BD</span>
+                Bazario
             </div>
         </div>
     </div>

@@ -4,11 +4,11 @@
     $catName = isset($activeCategory) ? $activeCategory->name : (isset($pageTitle) ? $pageTitle : 'All Products');
     $catDesc = isset($activeCategory) && $activeCategory->description
         ? \Illuminate\Support\Str::limit(strip_tags($activeCategory->description), 160)
-        : 'Explore our premium collection of ' . strtolower($catName) . ' with guaranteed authenticity, fast delivery, and exclusive pricing at SmartLookBD.';
-    $catKeywords = 'buy ' . strtolower($catName) . ' bd, ' . strtolower($catName) . ' online, authentic ' . strtolower($catName) . ' bangladesh, SmartLookBD';
+        : 'Explore our premium collection of ' . strtolower($catName) . ' with guaranteed authenticity, fast delivery, and exclusive pricing at Bazario.';
+    $catKeywords = 'buy ' . strtolower($catName) . ' bd, ' . strtolower($catName) . ' online, authentic ' . strtolower($catName) . ' bangladesh, Bazario';
 @endphp
 
-@section('title', $catName . ' - SmartLookBD')
+@section('title', $catName . ' - Bazario')
 @section('meta_description', $catDesc)
 @section('meta_keywords', $catKeywords)
 
@@ -92,55 +92,77 @@
                 display: none !important;
             }
         }
+
+        /* Product Reveal Animation */
+        @keyframes revealFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-reveal {
+            opacity: 0;
+            animation: revealFadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .category-active {
+            background-color: #FFFBEB !important;
+            border: 1.5px solid #FCD34D !important;
+            border-left: 4px solid #FCD34D !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
     </style>
 
-    <div id="main-products-view" class="mx-auto px-4 lg:px-8 py-6" style="padding-top: 24px;">
-        <div x-data="{ mobileFiltersOpen: false }" class="flex flex-col lg:flex-row gap-8 lg:gap-14">
+    <div id="main-products-view" class="mx-auto px-0 lg:px-0 py-0" style="padding-top: 0px;">
+        <div x-data="{ mobileFiltersOpen: false }" class="flex flex-col lg:flex-row gap-0">
 
             <!-- Sidebar Filters -->
-            <aside class="hidden lg:block w-64 flex-shrink-0 pr-8" style="border-right: 2px solid #EEEEEE;">
-                <div class="sticky top-24 overflow-y-auto custom-scrollbar pr-10 space-y-8"
-                    style="height: calc(100vh - 120px); overscroll-behavior: none; padding-bottom: 2rem;">
+            <aside class="hidden lg:block w-[220px] xl:w-[240px] flex-shrink-0" style="border-right: 1px solid #EEEEEE;">
+                <div class="sticky top-[70px] overflow-y-auto custom-scrollbar space-y-0"
+                    style="height: calc(100vh - 70px); overscroll-behavior: none; padding-bottom: 2rem;">
 
                     {{-- Special Offers Section --}}
                     <div>
-                        <h3 class="text-white text-[11px] font-black uppercase tracking-[0.12em] mb-4 flex items-center gap-2 px-4 py-3 shadow-sm"
-                            style="background-color: #ff3f6c !important; color: white !important; border-radius: 0px !important;">
+                        <h3 class="text-white text-[11px] font-black uppercase tracking-[0.15em] mb-3 flex items-center gap-2 px-4 py-3"
+                            style="background-color: #000000 !important; color: white !important;">
                             Special Offers
                         </h3>
-                        <ul class="space-y-2">
+                        <ul class="space-y-0 px-2">
                             <li>
                                 <a href="{{ route('products.index', ['featured' => 1]) }}"
-                                    class="text-[13px] {{ request('featured') ? 'text-black font-black border-[#45b86f]' : 'text-[#666666] font-bold border-gray-100' }} hover:border-[#45b86f] hover:bg-gray-50 transition-all flex items-center gap-2 px-4 py-2.5 rounded-[4px] border border-solid"
-                                    style="{{ request('featured') ? 'background-color: #E6FFFA !important;' : '' }}">
-                                    <svg class="w-4 h-4 text-orange-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                                    Top Selling
+                                    class="text-[13px] flex items-center gap-2 px-3 py-2.5 transition-all"
+                                    style="{{ request('featured') ? 'color: #ff3f6c !important; font-weight: 800;' : 'color: #535766; font-weight: 600;' }}">
+                                    @if(request('featured'))<span style="color:#ff3f6c;">⚡</span>@else<span>⚡</span>@endif
+                                    Mega Deal
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('products.index', ['new' => 1]) }}"
-                                    class="text-[13px] {{ request('new') || (isset($pageTitle) && $pageTitle === 'ðŸ”¥ Flash Sale') ? 'text-black font-black border-[#45b86f]' : 'text-[#666666] font-bold border-gray-100' }} hover:border-[#45b86f] hover:bg-gray-50 transition-all flex items-center gap-2 px-4 py-2.5 rounded-[4px] border border-solid"
-                                    style="{{ request('new') || (isset($pageTitle) && $pageTitle === 'ðŸ”¥ Flash Sale') ? 'background-color: #E6FFFA !important;' : '' }}">
-                                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.99 7.99 0 0120 13a7.98 7.98 0 01-2.343 5.657z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 16.121A3 3 0 1012.015 11L11 14l.879 2.121z"/></svg>
+                                    class="text-[13px] flex items-center gap-2 px-3 py-2.5 transition-all"
+                                    style="{{ request('new') ? 'color: #ff3f6c !important; font-weight: 800;' : 'color: #535766; font-weight: 600;' }}">
+                                    @if(request('new'))<span style="color:#ff3f6c;">🔥</span>@else<span>🔥</span>@endif
                                     New Arrival
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('products.index', ['sort' => 'newest']) }}"
-                                    class="text-[13px] {{ request('sort') === 'newest' ? 'text-black font-black border-[#45b86f]' : 'text-[#666666] font-bold border-gray-100' }} hover:border-[#45b86f] hover:bg-gray-50 transition-all flex items-center gap-2 px-4 py-2.5 rounded-[4px] border border-solid"
-                                    style="{{ request('sort') === 'newest' ? 'background-color: #E6FFFA !important;' : '' }}">
-                                    <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-                                    Top Selling
+                                <a href="{{ route('products.index', ['featured' => 1, 'sort' => 'best_selling']) }}"
+                                    class="text-[13px] flex items-center gap-2 px-3 py-2.5 transition-all"
+                                    style="color: #535766; font-weight: 600;">
+                                    ⭐ Top Selling
                                 </a>
                             </li>
                             <li>
                                 <a href="{{ route('products.index', ['free_shipping' => 1]) }}"
-                                    class="text-[13px] {{ request('free_shipping') ? 'text-black font-black border-[#45b86f]' : 'text-[#666666] font-bold border-gray-100' }} hover:border-[#45b86f] hover:bg-gray-50 transition-all flex items-center gap-2 px-4 py-2.5 rounded-[4px] border border-solid"
-                                    style="{{ request('free_shipping') ? 'background-color: #E6FFFA !important;' : '' }}">
-                                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
-                                    Free Delivery
+                                    class="text-[13px] flex items-center gap-2 px-3 py-2.5 transition-all"
+                                    style="{{ request('free_shipping') ? 'color: #ff3f6c !important; font-weight: 800;' : 'color: #535766; font-weight: 600;' }}">
+                                    🚚 Free Delivery
                                 </a>
-                            </li>
+                            </li>     </li>
                         </ul>
                         <div x-data="{ 
                                                     min: {{ request('min_price', $minPrice ?? 0) }}, 
@@ -211,27 +233,24 @@
                         </div>
 
                         {{-- Categories Section --}}
-                        <div>
-                            <div class="flex items-center justify-between mb-4 px-4 py-2.5 shadow-sm"
-                                style="background-color: #282c3f !important; border-radius: 0px !important;">
-                                <h3 class="text-white text-[11px] font-black uppercase tracking-[0.12em]"
-                                    style="color: white !important;">Categories</h3>
-                                <a href="{{ route('products.index') }}"
-                                    class="text-[9px] px-2.5 py-1 font-black hover:bg-white/30 transition-colors uppercase"
-                                    style="background-color: #FF0000 !important; color: white !important; border-radius: 0px !important;">Clear</a>
+                        <div class="mt-4">
+                            <div class="flex items-center justify-between px-3 py-2.5"
+                                style="background-color: #282c3f !important;">
+                                <h3 class="text-white text-[11px] font-black uppercase tracking-[0.15em]">Categories</h3>
+                                <a href="{{ route('products.index') }}" class="text-[9px] px-2 py-0.5 font-black uppercase"
+                                    style="background-color: #FF3F6C; color: white;">Clear</a>
                             </div>
-                            <ul class="space-y-2">
+                            <ul class="space-y-0">
                                 @foreach($categories as $cat)
                                     @php
                                         $isCatActive = (request('category') === $cat->slug) || (isset($activeCategory) && $activeCategory->id === $cat->id);
                                     @endphp
                                     <li>
                                         <a href="{{ route('products.index', ['category' => $cat->slug]) }}"
-                                            class="group flex items-center justify-between py-2.5 px-4 rounded-[4px] border border-solid transition-all {{ $isCatActive ? 'border-[#45b86f] text-black font-black' : 'border-gray-100 text-[#666666] font-bold hover:border-[#45b86f] hover:bg-gray-50 hover:text-black' }}"
-                                            style="{{ $isCatActive ? 'background-color: #E6FFFA !important;' : '' }}">
-                                            <span class="text-[13px]">{{ $cat->name }}</span>
-                                            <span
-                                                class="text-[11px] {{ $isCatActive ? 'text-black' : 'text-gray-400' }} font-black group-hover:text-black">{{ $cat->products_count }}</span>
+                                           id="sidebar-cat-{{ $cat->id }}"
+                                           class="group flex items-center justify-between py-3 px-4 transition-all border-b border-gray-50 hover:bg-gray-50 {{ $isCatActive ? 'category-active' : '' }}">
+                                            <span class="text-[13px] {{ $isCatActive ? 'font-black text-black' : 'font-semibold text-[#535766]' }} group-hover:text-black transition-colors">{{ $cat->name }}</span>
+                                            <span class="text-[11px] {{ $isCatActive ? 'text-orange-600 font-black' : 'text-gray-400' }} font-bold">{{ $cat->products_count }}</span>
                                         </a>
                                     </li>
                                 @endforeach
@@ -241,11 +260,11 @@
             </aside>
 
             <!-- Main Content Area -->
-            <div class="flex-1">
+            <div class="flex-1 lg:pl-6 xl:pl-8 px-4 lg:px-0 py-4 lg:py-4">
 
                 {{-- Search & Mobile Toggle --}}
                 <div
-                    class="mobile-sticky-search flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mt-0 sm:mt-10 mb-3 sm:mb-6 w-full z-40 bg-white py-2 sm:py-0">
+                    class="mobile-sticky-search flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mt-0 mb-3 sm:mb-5 w-full z-40 bg-white py-2 sm:py-0">
                     <div class="flex-1 w-full">
                         <form action="{{ route('products.index') }}" method="GET" class="w-full">
                             @foreach(request()->except(['q', 'page']) as $key => $value)
@@ -531,10 +550,16 @@
 
                 {{-- Product Grid --}}
                 @if($products->count() > 0)
-                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-3 lg:gap-4 force-3-cols">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-3">
                         @foreach($products as $product)
-                            @include('partials.product-card', ['product' => $product])
+                            <div class="product-reveal" style="animation-delay: {{ $loop->index * 0.05 }}s">
+                                @include('partials.product-card', ['product' => $product, 'no_aos' => true])
+                            </div>
                         @endforeach
+                    </div>
+                    
+                    <div class="mt-16 py-8 flex justify-center border-t border-gray-100 italic text-gray-400 text-[11px] tracking-wide uppercase font-bold">
+                        Showing all {{ $products->count() }} results
                     </div>
                 @else
                     <div class="flex flex-col items-center justify-center py-20 px-4 bg-gray-50/50 border border-dashed border-gray-200"
@@ -553,12 +578,6 @@
                             style="background-color: #ff3f6c !important;">
                             Explore All Products
                         </a>
-                    </div>
-                @endif
-
-                @if($products->count() > 0)
-                    <div class="mt-12 py-8 flex justify-center border-t border-gray-100 italic text-gray-400 text-xs">
-                        Showing all {{ $products->count() }} results
                     </div>
                 @endif
             </div>
@@ -635,10 +654,25 @@
         document.addEventListener('DOMContentLoaded', function () {
             if (window.innerWidth < 1024) { // Only for mobile/tablet
                 if (window.location.search.length > 0) {
-                    // This clears the address bar but keeps the products filtered
-                    // So the next browser refresh will hit the base URL directly
-                    history.replaceState(null, '', window.location.pathname);
+                    // history.replaceState(null, '', window.location.pathname);
                 }
+            }
+
+            // Sidebar Scroll Persistence
+            const sidebar = document.querySelector('aside .sticky');
+            if (sidebar) {
+                // Restore scroll position
+                const savedScrollTop = sessionStorage.getItem('sidebarScrollTop');
+                if (savedScrollTop) {
+                    sidebar.scrollTop = savedScrollTop;
+                }
+
+                // Save scroll position when clicking a link
+                sidebar.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        sessionStorage.setItem('sidebarScrollTop', sidebar.scrollTop);
+                    });
+                });
             }
         });
     </script>

@@ -31,13 +31,47 @@ class ProductController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        if ($request->filled('target_page')) {
-            $query->whereHas('category', function($q) use ($request) {
-                $q->where('target_page', $request->target_page);
-            });
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status == 'active');
         }
 
-        $products = $query->latest()->paginate(20)->withQueryString();
+        if ($request->filled('stock_status')) {
+            if ($request->stock_status == 'instock') {
+                $query->where('stock', '>', 10);
+            } elseif ($request->stock_status == 'outofstock') {
+                $query->where('stock', '<=', 0);
+            } elseif ($request->stock_status == 'lowstock') {
+                $query->where('stock', '>', 0)->where('stock', '<=', 10);
+            }
+        }
+
+        if ($request->filled('type')) {
+            if ($request->type == 'new') {
+                $query->where('is_new', true);
+            } elseif ($request->type == 'featured') {
+                $query->where('is_featured', true);
+            } elseif ($request->type == 'top_sell') {
+                $query->where('is_top_sell', true);
+            }
+        }
+
+        if ($request->filled('sort')) {
+            if ($request->sort == 'price_low') {
+                $query->orderBy('price', 'asc');
+            } elseif ($request->sort == 'price_high') {
+                $query->orderBy('price', 'desc');
+            } elseif ($request->sort == 'stock_low') {
+                $query->orderBy('stock', 'asc');
+            } elseif ($request->sort == 'stock_high') {
+                $query->orderBy('stock', 'desc');
+            } else {
+                $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->paginate(20)->withQueryString();
         
         $categoriesQuery = Category::where('is_active', true);
         if ($request->filled('target_page')) {
@@ -79,6 +113,7 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'buying_price' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
             'sale_price' => 'nullable|numeric|min:0',
             'sku' => 'nullable|string|max:50|unique:products,sku',
@@ -87,6 +122,7 @@ class ProductController extends Controller
             'brand' => 'nullable|string',
             'is_featured' => 'boolean',
             'is_new' => 'boolean',
+            'is_top_sell' => 'boolean',
             'is_active' => 'boolean',
             'sizes' => 'nullable|string',
             'colors' => 'nullable',
@@ -121,6 +157,7 @@ class ProductController extends Controller
         $data['is_mega_deal'] = $request->boolean('is_mega_deal');
         $data['mega_deal_effect'] = $request->input('mega_deal_effect', 'all');
         $data['is_new'] = $request->boolean('is_new', true); // Default new products to new
+        $data['is_top_sell'] = $request->boolean('is_top_sell');
         $data['is_active'] = $request->boolean('is_active', true); // Default to active
         $data['is_size_chart_active'] = $request->boolean('is_size_chart_active', true);
         $data['free_shipping'] = $request->boolean('free_shipping');
@@ -214,6 +251,7 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'buying_price' => 'required|numeric|min:0',
             'price' => 'required|numeric|min:0',
             'sale_price' => 'nullable|numeric|min:0',
             'sku' => 'nullable|string|max:50|unique:products,sku,' . $product->id,
@@ -221,6 +259,8 @@ class ProductController extends Controller
             'description' => 'nullable|string',
             'brand' => 'nullable|string',
             'is_featured' => 'boolean',
+            'is_new' => 'boolean',
+            'is_top_sell' => 'boolean',
             'is_active' => 'boolean',
             'sizes' => 'nullable|string',
             'colors' => 'nullable',
@@ -253,6 +293,7 @@ class ProductController extends Controller
         $data['is_mega_deal'] = $request->boolean('is_mega_deal');
         $data['mega_deal_effect'] = $request->input('mega_deal_effect', 'all');
         $data['is_new'] = $request->boolean('is_new');
+        $data['is_top_sell'] = $request->boolean('is_top_sell');
         $data['is_active'] = $request->boolean('is_active');
         $data['is_size_chart_active'] = $request->boolean('is_size_chart_active');
         $data['free_shipping'] = $request->boolean('free_shipping');
@@ -352,6 +393,20 @@ class ProductController extends Controller
         }
         $product->delete();
         return redirect(session('last_products_url', route('admin.products.index')))->with('success', 'Product deleted!');
+    }
+
+    public function toggleStatus($id, Request $request)
+    {
+        $product = Product::findOrFail($id);
+        $field = $request->field;
+        if (!in_array($field, ['is_featured', 'is_new', 'is_top_sell', 'is_active'])) {
+            return response()->json(['success' => false, 'message' => 'Invalid field']);
+        }
+
+        $product->$field = !$product->$field;
+        $product->save();
+
+        return response()->json(['success' => true, 'value' => $product->$field]);
     }
 
     public function bulkDestroy(Request $request)

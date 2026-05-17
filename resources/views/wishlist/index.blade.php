@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Wishlist - SmartLookBD')
+@section('title', 'My Wishlist - Bazario')
 @section('body_bg', '#FFFFFF')
 
 @section('content')

@@ -39,7 +39,7 @@
     x-init="startSlider()"
     @mouseenter="stopSlider()"
     @mouseleave="startSlider()"
-    class="product-card group bg-white rounded-[10px] border border-gray-100 shadow-sm overflow-hidden flex flex-col relative transition-all duration-300 {{ $class ?? '' }}"
+    class="product-card group bg-white border border-gray-100 overflow-hidden flex flex-col relative transition-all duration-300 hover:shadow-lg {{ $class ?? '' }}"
     {!! !($no_aos ?? false) ? 'data-aos="fade-up" data-aos-delay="' . ($delay ?? 0) . '"' : '' !!}>
     
     {{-- Image Container (Fabrilife Style) --}}
@@ -87,7 +87,7 @@
         {{-- Free Delivery Badge (Bottom Left - Fabrilife Style) --}}
         @if($product->free_shipping)
         <div class="absolute bottom-2 left-2 z-20 pointer-events-none">
-            <span class="text-white text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-sm uppercase" style="background-color: #009848 !important; color: #FFFFFF !important;">
+            <span class="text-white text-[9px] sm:text-[10px] font-bold px-2 py-1 rounded-[2px] flex items-center gap-1 shadow-sm uppercase" style="background-color: #2BB673 !important; color: #FFFFFF !important;">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 011 1v2.5a1.5 1.5 0 01-3 0V17a1 1 0 011-1h2zm7-1a1 1 0 011 1v2.5a1.5 1.5 0 01-3 0V17a1 1 0 011-1h2z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9h4l3 3v4h-7V9z"/></svg>
                 Free Delivery
             </span>
@@ -97,7 +97,7 @@
         {{-- Expand/Quick-View & Wishlist Icons (Fabrilife/Myntra Style) --}}
         <div class="absolute top-2 sm:top-4 right-2 sm:right-4 z-30 flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-500">
              <button @click.stop="$dispatch('open-image-modal', { images: images, index: currentIndex })" 
-                     class="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center bg-white/95 text-gray-900 hover:bg-[#45b86f] hover:text-white rounded-full transition-all duration-300 shadow-md active:scale-95 backdrop-blur-sm"
+                     class="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 items-center justify-center bg-white/95 text-gray-900 hover:bg-black hover:text-white rounded-full transition-all duration-300 shadow-md active:scale-95 backdrop-blur-sm"
                      title="View Gallery">
                 <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
@@ -121,7 +121,7 @@
     <div class="p-1.5 sm:p-4 pb-1.5 sm:pb-6 flex flex-col flex-1 relative bg-white" style="padding-right: 40px;">
         {{-- Product name --}}
         <a href="{{ route('products.show', $product->slug) }}" class="block mb-0.5 sm:mb-4">
-            <h3 class="text-[11px] sm:text-sm text-[#333333] font-bold leading-tight line-clamp-2 hover:text-[#45b86f] transition-colors">
+            <h3 class="text-[11px] sm:text-sm text-[#333333] font-bold leading-tight line-clamp-2 hover:text-[#222222] transition-colors">
                 {{ $product->name }}
             </h3>
         </a>
@@ -132,7 +132,7 @@
         {{-- Save Amount Pill (Above Price - Fabrilife Style) --}}
         @if($product->effective_price < $product->price)
         <div class="mb-0.5 sm:mb-1.5">
-            <span class="text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full inline-flex items-center gap-1 shadow-sm" style="background-color: #009848 !important; color: #FFFFFF !important;">
+            <span class="text-white text-[8px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-sm inline-flex items-center gap-1 shadow-sm" style="background-color: #ff3f6c !important; color: #FFFFFF !important;">
                 <svg class="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12.76 3.76a2 2 0 012.83 0l5.65 5.65a2 2 0 010 2.83l-9.9 9.9a2 2 0 01-2.83 0l-5.65-5.65a2 2 0 010-2.83l9.9-9.9zM6.5 8.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
                 </svg>
@@ -173,7 +173,7 @@
                     right: 16px !important;
                 }
                 .smart-cart-btn:hover {
-                    background-color: #10B981 !important;
+                    background-color: #111111 !important;
                     transform: scale(1.1);
                 }
                 .smart-cart-icon {

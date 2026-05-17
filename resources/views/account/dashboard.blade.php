@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Account - SmartLookBD')
+@section('title', 'My Account - Bazario')
 
 @section('content')
 <style>
@@ -107,7 +107,7 @@
                 <div class="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 mb-8 flex flex-wrap md:flex-nowrap items-center justify-between gap-6" style="display: flex; width: 100%; box-sizing: border-box;">
                     <div style="flex: 1; min-width: 250px;">
                         <h1 class="text-3xl font-black text-gray-900 tracking-tight mb-2">Welcome Back!</h1>
-                        <p class="text-gray-500 font-medium whitespace-normal">Manage your orders and stay updated with SmartLookBD.</p>
+                        <p class="text-gray-500 font-medium whitespace-normal">Manage your orders and stay updated with Bazario.</p>
                     </div>
                     
                     <div class="bg-gray-50 px-8 py-5 rounded-2xl border border-gray-100 flex items-center gap-5" style="min-width: max-content;">

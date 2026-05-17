@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
     {
         // Create Admin User
         User::create([
-            'name' => 'SmartLookBD Admin',
+            'name' => 'Bazario Admin',
             'email' => 'admin@nackobd.com',
             'email_verified_at' => now(),
             'password' => Hash::make('admin123'),
@@ -193,7 +193,7 @@ class DatabaseSeeder extends Seeder
                 'is_featured' => $p['is_featured'] ?? false,
                 'is_active' => true,
                 'is_new' => $p['is_new'] ?? ($i < 10),
-                'brand' => $p['brand'] ?? 'SmartLookBD',
+                'brand' => $p['brand'] ?? 'Bazario',
             ]);
 
             // Add product images

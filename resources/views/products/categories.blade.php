@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Categories - SmartLookBD')
+@section('title', 'Categories - Bazario')
 @section('body_bg', '#f2f5f8')
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-4 md:py-8">

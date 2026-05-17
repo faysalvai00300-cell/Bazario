@@ -26,13 +26,13 @@
                     <div class="space-y-4">
                         <div>
                             <label class="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Site Name</label>
-                            <input type="text" name="site_name" value="{{ old('site_name', $settings->site_name ?? 'SmartLookBD') }}" required 
+                            <input type="text" name="site_name" value="{{ old('site_name', $settings->site_name ?? 'Bazario') }}" required 
                                 class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
                         </div>
 
                         <div>
                             <label class="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Contact Email</label>
-                            <input type="email" name="contact_email" value="{{ old('contact_email', $settings->contact_email ?? '') }}" placeholder="support@SmartLookBD.com"
+                            <input type="email" name="contact_email" value="{{ old('contact_email', $settings->contact_email ?? '') }}" placeholder="support@Bazario.com"
                                 class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
                         </div>
 

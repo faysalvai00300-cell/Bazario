@@ -19,6 +19,19 @@ class SalesController extends Controller
         $query = Order::whereBetween('created_at', [$startDate, $endDate]);
 
         // Overall Stats
+        $deliveredOrders = (clone $query)->where('status', 'delivered')->with('items')->get();
+        $returnedOrders = (clone $query)->where('status', 'returned')->get();
+
+        $deliveredRevenue = $deliveredOrders->sum('subtotal');
+        $deliveredCogs = $deliveredOrders->sum(function($order) {
+            return $order->items->sum(function($item) {
+                return ($item->buying_price ?? 0) * $item->quantity;
+            });
+        });
+        $returnedShippingLoss = $returnedOrders->sum('shipping');
+        
+        $netProfit = $deliveredRevenue - $deliveredCogs - $returnedShippingLoss;
+
         $stats = [
             'total_sales' => (clone $query)->whereIn('status', ['pending', 'confirmed', 'shipped', 'delivered'])->sum('total'),
             'total_orders' => (clone $query)->count(),
@@ -30,10 +43,13 @@ class SalesController extends Controller
             'shipped_value' => (clone $query)->where('status', 'shipped')->sum('total'),
             'delivered_count' => (clone $query)->where('status', 'delivered')->count(),
             'delivered_value' => (clone $query)->where('status', 'delivered')->sum('total'),
+            'returned_count' => (clone $query)->where('status', 'returned')->count(),
+            'returned_value' => (clone $query)->where('status', 'returned')->sum('total'),
             'cancelled_count' => (clone $query)->where('status', 'cancelled')->count(),
             'cancelled_value' => (clone $query)->where('status', 'cancelled')->sum('total'),
             'incomplete_count' => (clone $query)->where('status', 'incomplete')->count(),
             'incomplete_value' => (clone $query)->where('status', 'incomplete')->sum('total'),
+            'net_profit' => $netProfit,
         ];
 
         // Daily Sales Chart Data

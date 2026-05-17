@@ -224,7 +224,7 @@
                                 <div class="flex items-center justify-between">
                                     <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden h-8">
                                         <button @click="updateQty(item.cart_key, item.qty - 1)" class="w-8 h-full flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-600 transition">-</button>
-                                        <input type="number" readonly :value="item.qty" class="w-10 h-full text-center text-sm font-semibold text-gray-800 focus:outline-none border-x border-gray-200 select-none">
+                                        <input type="number" readonly :value="item.qty" class="w-10 h-full text-center text-sm font-semibold text-gray-800 focus:outline-none select-none">
                                         <button @click="updateQty(item.cart_key, item.qty + 1)" class="w-8 h-full flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-600 transition">+</button>
                                     </div>
                                     <button @click="removeItem(item.cart_key)" class="text-gray-400 hover:text-red-500 text-xs font-semibold underline transition">Remove</button>

@@ -1,10 +1,10 @@
 @extends('layouts.app')
-@section('title', 'Frequently Asked Questions - SmartLookBD')
+@section('title', 'Frequently Asked Questions - Bazario')
 @section('content')
 <div class="max-w-4xl mx-auto px-4 py-16">
     <div class="text-center mb-12">
         <h1 class="text-3xl font-black text-gray-900 mb-4">Frequently Asked Questions</h1>
-        <p class="text-gray-500">Find answers to common questions about shopping with SmartLookBD.</p>
+        <p class="text-gray-500">Find answers to common questions about shopping with Bazario.</p>
     </div>
     
     <div class="space-y-4" x-data="{ activeFaq: 0 }">

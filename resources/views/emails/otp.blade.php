@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your OTP Code - SmartLookBD</title>
+    <title>Your OTP Code - Bazario</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f4f7f9; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -12,7 +12,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" width="400" style="background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
                     <tr>
                         <td align="center" style="padding: 30px 40px; background-color: #1a1a1a;">
-                            <h1 style="margin: 0; color: #ffffff; font-size: 24px; letter-spacing: 2px;">SmartLook <span style="color: #45b86f;">BD</span></h1>
+                            <h1 style="margin: 0; color: #ffffff; font-size: 24px; letter-spacing: 2px;">Bazario <span style="color: #45b86f;">BD</span></h1>
                         </td>
                     </tr>
                     <tr>
@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <td align="center" style="padding: 20px 40px; background-color: #f9fafb; border-top: 1px solid #f1f5f9;">
-                            <p style="margin: 0; color: #64748b; font-size: 11px;">© {{ date('Y') }} <a href="{{ url('/') }}" style="color: #45b86f; text-decoration: none;">SmartLookBD</a> . All rights reserved.</p>
+                            <p style="margin: 0; color: #64748b; font-size: 11px;">© {{ date('Y') }} <a href="{{ url('/') }}" style="color: #45b86f; text-decoration: none;">Bazario</a> . All rights reserved.</p>
                         </td>
                     </tr>
                 </table>

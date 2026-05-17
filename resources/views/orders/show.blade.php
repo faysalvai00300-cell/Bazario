@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Order ' . $order->order_number . ' - SmartLookBD')
+@section('title', 'Order ' . $order->order_number . ' - Bazario')
 
 @section('content')
 <div class="bg-[#F8FAFC] min-h-screen py-8 md:py-16">

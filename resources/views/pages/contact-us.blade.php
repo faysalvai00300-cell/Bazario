@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Contact Us - SmartLookBD')
+@section('title', 'Contact Us - Bazario')
 @section('content')
 <div class="max-w-7xl mx-auto px-4 py-16">
     <div class="text-center mb-12">
@@ -37,7 +37,7 @@
                     </div>
                     <div>
                         <p class="font-bold text-gray-900 mb-1">Email Address</p>
-                        <p>support@SmartLookBD.com</p>
+                        <p>support@Bazario.com.bd</p>
                     </div>
                 </li>
             </ul>

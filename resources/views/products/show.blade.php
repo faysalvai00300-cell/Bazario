@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('meta_title', $product->meta_title ?: $product->name . ' - SmartLookBD')
+@section('meta_title', $product->meta_title ?: $product->name . ' - Bazario')
 @section('meta_description', $product->meta_description ?: Str::limit(strip_tags($product->description ?? ''), 160))
 @if($product->meta_keywords)
 @section('meta_keywords', $product->meta_keywords)
@@ -22,7 +22,7 @@
   "sku": "{{ $product->id }}",
   "brand": {
     "@@type": "Brand",
-    "name": "{{ $product->brand ?? 'SmartLookBD' }}"
+    "name": "{{ $product->brand ?? 'Bazario' }}"
   },
   "offers": {
     "@@type": "Offer",
@@ -144,10 +144,7 @@
         width: 40px;
         height: 100%;
         text-align: center;
-        border-left: 1px solid #999 !important;
-        border-right: 1px solid #999 !important;
-        border-top: none !important;
-        border-bottom: none !important;
+        border: none !important;
         font-weight: 700;
         font-size: 14px;
         color: #000;

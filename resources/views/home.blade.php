@@ -1,10 +1,10 @@
 @extends('layouts.app')
-@section('title', 'SmartLookBD - Best Online Shopping in Bangladesh for Premium Products')
-@section('meta_description', 'SmartLookBD is your premium destination for authentic perfumes, luxury fragrances, fashion, and electronics in Bangladesh. Enjoy official warranty and fast home delivery.')
+@section('title', 'Bazario - Best Online Shopping in Bangladesh for Premium Products')
+@section('meta_description', 'Bazario is your premium destination for authentic perfumes, luxury fragrances, fashion, and electronics in Bangladesh. Enjoy official warranty and fast home delivery.')
 
 @section('content')
 <!-- SEO H1 - Hidden but crawlable -->
-<h1 class="sr-only">SmartLookBD: Premium Online Shopping in Bangladesh for Authentic Perfumes & Lifestyle</h1>
+<h1 class="sr-only">Bazario: Premium Online Shopping in Bangladesh for Authentic Perfumes & Lifestyle</h1>
 
 @push('styles')
 <script type="application/ld+json">
@@ -14,9 +14,9 @@
     {
       "@@type": "WebSite",
       "@@id": "{{ url('/') }}/#website",
-      "name": "SmartLookBD",
+      "name": "Bazario",
       "url": "{{ url('/') }}",
-      "description": "SmartLookBD - Premium Online Shopping Bangladesh",
+      "description": "Bazario - Premium Online Shopping Bangladesh",
       "potentialAction": {
         "@@type": "SearchAction",
         "target": "{{ url('/search') }}?q={search_term_string}",
@@ -26,9 +26,9 @@
     {
       "@@type": "Organization",
       "@@id": "{{ url('/') }}/#organization",
-      "name": "SmartLookBD",
+      "name": "Bazario",
       "url": "{{ url('/') }}",
-      "logo": "{{ asset('final logo.jpeg') }}",
+      "logo": "{{ asset('bazario-logo.png') }}",
       "contactPoint": {
         "@@type": "ContactPoint",
         "telephone": "+8801900000000",
@@ -203,7 +203,7 @@
                     <a href="{{ route('products.index') }}" class="block relative h-44 sm:h-80 pc-hero-banner rounded-none overflow-hidden shadow-none bg-gray-100">
                         <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" 
                             class="absolute inset-0 w-full h-full object-cover" 
-                            style="object-position: center bottom; will-change: transform;"
+                            style="object-position: center top; will-change: transform;"
                             onerror="this.style.opacity='0'"
                             decoding="sync" 
                             loading="eager"
@@ -226,16 +226,30 @@
         padding-left: 16px !important;
         padding-right: 16px !important;
     }
+    .promo-bar-container,
+    .promo-bar-container * {
+        box-shadow: none !important;
+        text-shadow: none !important;
+        filter: none !important;
+    }
     @media (min-width: 768px) {
         .promo-bar-container {
             padding-left: 32px !important;
             padding-right: 32px !important;
+            height: 46px !important;
+        }
+        .app-promo-box img {
+            height: 24px !important;
         }
     }
     @media (min-width: 1280px) {
         .promo-bar-container {
             padding-left: 130px !important;
             padding-right: 133px !important;
+            height: 46px !important;
+        }
+        .app-promo-box img {
+            height: 28px !important;
         }
     }
 </style>
@@ -250,10 +264,10 @@
     </div>
 </div>
 
-<div class="hidden md:block bg-white border-b border-gray-200 mt-3 overflow-x-auto">
-    <div class="min-w-[1000px] xl:min-w-0 max-w-full mx-auto flex items-center h-[90px] text-[13px] xl:text-[15px] font-bold uppercase tracking-wider xl:tracking-widest promo-bar-container">
+<div class="hidden md:block bg-white border-b border-gray-200 mt-3 overflow-x-auto promo-bar-outer">
+    <div class="min-w-[1000px] xl:min-w-0 max-w-full mx-auto flex items-center h-[46px] text-[13px] xl:text-[14px] font-bold uppercase tracking-wider xl:tracking-widest promo-bar-container">
         <!-- Shop Now -->
-        <a href="{{ route('products.index') }}" class="flex-[1.2] xl:flex-[1.5] h-full flex items-center justify-center transition border-r border-gray-200 text-gray-800" style="background-color: #f1f1f1;">
+        <a href="{{ route('products.index') }}" class="flex-[1.2] xl:flex-[1.5] h-full flex items-center justify-center transition border-r border-gray-200 text-gray-800">
             Shop Now
         </a>
         <!-- Men -->
@@ -273,11 +287,11 @@
             Sports
         </a>
         <!-- App Promo -->
-        <div class="flex-[1.8] xl:flex-[2] h-full flex items-center justify-center gap-3 xl:gap-6 border-l border-gray-200" style="background-color: #f1f1f1;">
-            <span class="text-gray-600 normal-case tracking-normal font-semibold text-xs xl:text-base">Get 5% Off <span class="hidden xl:inline">on App</span></span>
+        <div class="flex-[1.8] xl:flex-[2] h-full flex items-center justify-center gap-3 xl:gap-6 border-l border-gray-200 app-promo-box">
+            <span class="text-gray-900 font-bold uppercase text-xs xl:text-sm">Get 5% Off</span>
             <div class="flex items-center gap-2 xl:gap-3">
-                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" class="h-7 xl:h-10"></a>
-                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" class="h-7 xl:h-10"></a>
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Google Play" class="h-[24px] xl:h-[28px]"></a>
+                <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store" class="h-[24px] xl:h-[28px]"></a>
             </div>
         </div>
     </div>
@@ -350,7 +364,7 @@
                 {{-- Free Delivery Badge --}}
                 @if($product->free_shipping)
                 <div class="absolute top-2 right-2 z-10 pointer-events-none">
-                    <span class="text-white text-[8px] font-bold px-1.5 py-0.5 rounded-[2px] flex items-center gap-1 shadow-sm uppercase" style="background-color: #009848 !important; color: #FFFFFF !important; line-height: 1;">
+                    <span class="text-white text-[8px] font-bold px-1.5 py-0.5 rounded-[2px] flex items-center gap-1 shadow-sm uppercase" style="background-color: #2BB673 !important; color: #FFFFFF !important; line-height: 1;">
                         Free Delivery
                     </span>
                 </div>
@@ -644,7 +658,7 @@
                         {{-- Free Delivery Badge --}}
                         @if(!$isDemo && $product->free_shipping)
                         <div class="absolute top-2 right-2 z-10 pointer-events-none">
-                            <span class="text-white text-[8px] font-bold px-1.5 py-0.5 rounded-[2px] flex items-center gap-1 shadow-sm uppercase" style="background-color: #009848 !important; color: #FFFFFF !important; line-height: 1;">
+                            <span class="text-white text-[8px] font-bold px-1.5 py-0.5 rounded-[2px] flex items-center gap-1 shadow-sm uppercase" style="background-color: #2BB673 !important; color: #FFFFFF !important; line-height: 1;">
                                 Free Delivery
                             </span>
                         </div>
@@ -685,25 +699,27 @@
                     elseif (!$banner->show_on_desktop && !$banner->show_on_mobile) $promoVisibilityClass = 'hidden';
                 @endphp
                 <div class="swiper-slide h-full relative overflow-hidden border-[0.5px] border-black/[0.03] {{ $promoVisibilityClass }}">
-                    <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent"></div>
-                    <div class="absolute inset-0 flex items-center px-8 sm:px-14">
-                        <div class="text-white max-w-lg">
-                            @if($banner->badge_text)
-                            <span class="bg-[#45b86f] text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3 inline-block shadow-sm">{{ $banner->badge_text }}</span>
-                            @endif
-                            <h2 class="text-xl sm:text-4xl font-black leading-tight drop-shadow-md">{!! nl2br(e($banner->title)) !!}</h2>
-                            @if($banner->subtitle)
-                            <p class="text-gray-200 text-xs sm:text-sm mt-2 mb-4 font-medium drop-shadow-sm">{{ $banner->subtitle }}</p>
-                            @endif
-                            @if($banner->button_text)
-                            <a href="{{ $banner->link ?? route('products.index') }}" class="inline-flex items-center gap-2 bg-[#45b86f] hover:bg-white hover:text-[#45b86f] text-white px-5 py-2 sm:px-7 sm:py-3 rounded-full text-xs sm:text-sm font-black transition-all duration-300 shadow-xl active:scale-95">
-                                {{ $banner->button_text }} 
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-                            </a>
-                            @endif
+                    <a href="{{ $banner->link ?? route('products.index') }}" class="block w-full h-full relative decoration-none">
+                        <img src="{{ $banner->image_url }}" alt="{{ $banner->title }}" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent"></div>
+                        <div class="absolute inset-0 flex items-center px-8 sm:px-14">
+                            <div class="text-white max-w-lg">
+                                @if($banner->badge_text)
+                                <span class="bg-[#222222] text-white text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3 inline-block shadow-sm">{{ $banner->badge_text }}</span>
+                                @endif
+                                <h2 class="text-xl sm:text-4xl font-black leading-tight drop-shadow-md">{!! nl2br(e($banner->title)) !!}</h2>
+                                @if($banner->subtitle)
+                                <p class="text-gray-200 text-xs sm:text-sm mt-2 mb-4 font-medium drop-shadow-sm">{{ $banner->subtitle }}</p>
+                                @endif
+                                @if($banner->button_text)
+                                <div class="inline-flex items-center gap-2 bg-[#222222] hover:bg-white hover:text-[#222222] text-white px-5 py-2 sm:px-7 sm:py-3 rounded-full text-xs sm:text-sm font-black transition-all duration-300 shadow-xl active:scale-95">
+                                    {{ $banner->button_text }} 
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                                </div>
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
                 @endforeach
             </div>
@@ -883,7 +899,7 @@
                         {{-- Free Delivery Badge --}}
                         @if(!$isDemo && $product->free_shipping)
                         <div class="absolute top-2 right-2 z-10 pointer-events-none">
-                            <span class="text-white text-[8px] font-bold px-1.5 py-0.5 rounded-[2px] flex items-center gap-1 shadow-sm uppercase" style="background-color: #009848 !important; color: #FFFFFF !important; line-height: 1;">
+                            <span class="text-white text-[8px] font-bold px-1.5 py-0.5 rounded-[2px] flex items-center gap-1 shadow-sm uppercase" style="background-color: #2BB673 !important; color: #FFFFFF !important; line-height: 1;">
                                 Free Delivery
                             </span>
                         </div>
@@ -1078,33 +1094,36 @@
 
 
 
-<!-- Brand Philosophy Section (SmartLookBD Style) -->
-<section class="max-w-[1440px] mx-auto px-4 md:px-12 py-2 md:py-4 bg-white overflow-hidden">
-    <div class="flex flex-col lg:flex-row items-center gap-6 lg:gap-14">
-        <!-- Text Content -->
-        <div class="w-full lg:w-[60%]">
-            <div class="mb-2">
-                <h2 class="text-[22px] md:text-[45px] font-bold text-gray-900 inline-flex items-center gap-1.5 leading-none">
-                    SmartLookBD <span class="text-[#45b86f] font-light text-2xl md:text-5xl translate-y-[2px]">›</span>
-                </h2>
+<!-- Brand Philosophy Section (Bazario Style) -->
+<section class="max-w-[1440px] mx-auto px-4 md:px-12 py-6 md:py-10 bg-white">
+    <div class="w-full bg-[#f8f9fa] rounded-lg border border-gray-100 p-6 md:p-12 shadow-sm transition-all duration-300 hover:shadow-md">
+        <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <!-- Text Content -->
+            <div class="w-full lg:w-[58%]">
+                <div class="mb-4">
+                    <h2 class="text-3xl md:text-[42px] font-extrabold text-gray-900 tracking-tight leading-none flex items-center gap-2">
+                        Bazario 
+                        <span class="text-[#f7941e] font-light text-3xl md:text-5xl translate-y-[2px] transition-transform duration-300 hover:translate-x-1 cursor-pointer">›</span>
+                    </h2>
+                </div>
+                
+                <h3 class="text-base md:text-[24px] text-gray-800 font-semibold leading-snug mb-4" style="font-family: 'Inter', sans-serif;">
+                    Because comfort and confidence go hand in hand.
+                </h3>
+                
+                <p class="text-gray-600 text-xs md:text-[15px] leading-relaxed font-normal md:max-w-2xl">
+                    We focus on carefully selecting the best clothing that is comfortable, looks great, and makes you confident. Apart from the fabric, design and fit, we go through strict quality control parameters to give you what you truly deserve. The power of a good outfit is how it can influence your perception of yourself.
+                </p>
             </div>
-            
-            <h3 class="text-base md:text-[32px] text-gray-800 font-normal leading-tight mb-4 md:max-w-2xl" style="font-family: 'Inter', sans-serif;">
-                Because comfort and confidence go hand in hand.
-            </h3>
-            
-            <p class="text-[#5b6c8f] text-[13px] md:text-[19px] leading-relaxed font-normal md:max-w-3xl">
-                We focus on carefully selecting the best clothing that is comfortable, looks great, and makes you confident. Apart from the fabric, design and fit, we go through strict quality control parameters to give you what you truly deserve. The power of a good outfit is how it can influence your perception of yourself.
-            </p>
-        </div>
- 
-        <!-- Image Content (Stack of fabric) -->
-        <div class="w-full lg:w-[40%] flex justify-center lg:justify-end mt-2 lg:mt-0">
-            <div class="w-full rounded-none overflow-hidden" style="height: 260px;">
-                <img src="{{ asset('638b1d9333f59.png') }}" 
-                     alt="SmartLookBD Brand Philosophy" 
-                     class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                     loading="lazy">
+     
+            <!-- Image Content (Stack of fabric) -->
+            <div class="w-full lg:w-[42%] flex justify-center lg:justify-end mt-4 lg:mt-0">
+                <div class="w-full rounded-lg overflow-hidden" style="height: 240px;">
+                    <img src="{{ asset('638b1d9333f59.png') }}" 
+                         alt="Bazario Brand Philosophy" 
+                         class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                         loading="lazy">
+                </div>
             </div>
         </div>
     </div>

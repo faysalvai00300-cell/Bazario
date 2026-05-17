@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" x-data="{ 
-    open: false,
-    toggle() { this.open = !this.open },
-    close() { this.open = false }
+    sidebarOpen: false,
+    toggleSidebar() { this.sidebarOpen = !this.sidebarOpen },
+    closeSidebar() { this.sidebarOpen = false }
 }">
 <head>
     <meta charset="UTF-8">
@@ -20,59 +20,346 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Alpine.js Fallback -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @stack('styles')
     <style>
         [x-cloak] { display: none !important; }
-        body { font-family: 'Inter', sans-serif; background-color: #f5f5f6; }
-        .sidebar-bg { background-color: #1e1e2d; }
-        .sidebar-link { color: #a2a3b7; padding: 0.75rem 1.7rem; display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem; transition: all 0.3s ease; text-decoration: none; border-bottom: 1px solid rgba(255, 255, 255, 0.15); }
-        .sidebar-link:hover { color: #ffffff; background-color: #1b1b28; }
-        .sidebar-link.active { color: #ffb822; background-color: #1b1b28; border-left: 3px solid #ffb822; padding-left: calc(1.7rem - 3px); }
-        .sidebar-icon { width: 1.1rem; height: 1.1rem; opacity: 0.8; }
+        body { font-family: 'Inter', sans-serif; background-color: #f5f6f8; }
+        .sidebar-bg { background-color: #00002a; }
+        .sidebar-link { color: #9899b3; padding: 0.85rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-size: 0.84rem; transition: all 0.25s ease; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.12); }
+        .sidebar-link:hover { color: #ffffff; background-color: rgba(255,255,255,0.05); }
+        .sidebar-link.active { color: #ffb822; background-color: rgba(255,184,34,0.12); border-left: 4px solid #ffb822; padding-left: calc(1.5rem - 4px); font-weight: 700; }
+        .sidebar-icon { width: 1.1rem; height: 1.1rem; opacity: 0.75; flex-shrink: 0; }
         .sidebar-link:hover .sidebar-icon, .sidebar-link.active .sidebar-icon { opacity: 1; }
-        .topbar-bg { background-color: #1e1e2d; border-bottom: 1px solid #1e1e2d; }
-        
-        .bg-purple-gradient { background: linear-gradient(to right, #7B66FF, #6c55ef); }
+        .topbar-bg { background-color: #00002a; border-bottom: 1px solid rgba(255,255,255,0.08); }
+
+        .bg-purple-gradient { background: linear-gradient(135deg, #5b2a99 0%, #7b3fc4 40%, #9b4fd4 100%); }
         .text-dark-custom { color: #0d0925; }
-        
+
         /* Custom Scrollbar */
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #2b2b3c; border-radius: 10px; }
-        
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(255,255,255,0.1); border-radius: 10px; }
+
+        /* Sidebar submenu group header */
+        .sidebar-group-label { color: #5f6080; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 1rem 1.5rem 0.35rem; }
+
         /* Global Admin Primary Button Style Fixes */
         .admin-primary-btn, .btn-primary {
-            background-color: #FF6A00 !important;
+            background: linear-gradient(135deg, #7b3fc4, #5b2a99) !important;
             color: #ffffff !important;
             border: none;
         }
         .admin-primary-btn:hover, .btn-primary:hover {
-            background-color: #FF7A1A !important;
+            background: linear-gradient(135deg, #8a4fd4, #6b3ab0) !important;
         }
-        
+
         /* Layout Fixes without Tailwind JIT */
         @media (min-width: 768px) {
             .desktop-ml-256 { margin-left: 256px !important; }
             .desktop-w-calc { width: calc(100% - 256px) !important; }
         }
+
+        /* ====================================================
+           GLOBAL ADMIN DESIGN SYSTEM (POS-Style Consistency)
+           ==================================================== */
+
+        /* Page Header Card */
+        .page-header {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .page-header h2, .page-header h1 {
+            font-size: 18px;
+            font-weight: 900;
+            color: #111827;
+            margin: 0;
+        }
+
+        /* Data Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+        table thead {
+            background: #fafafa;
+        }
+        table thead th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #111827;
+            border-bottom: 2px solid #d1d5db;
+            white-space: nowrap;
+        }
+        table tbody tr {
+            border-bottom: 1px solid #cbd5e1;
+            transition: background 0.12s;
+        }
+        table tbody tr:hover {
+            background: #fff8f3;
+        }
+        table tbody tr:last-child {
+            border-bottom: none;
+        }
+        table tbody td {
+            padding: 12px 16px;
+            color: #374151;
+            vertical-align: middle;
+        }
+
+        /* Cards / Panels */
+        .admin-card {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .admin-card-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 900;
+            font-size: 14px;
+            color: #111827;
+        }
+
+        /* Form Inputs */
+        input[type="text"], input[type="email"], input[type="number"],
+        input[type="password"], input[type="search"], input[type="tel"],
+        input[type="url"], select, textarea {
+            border: 1.5px solid #e5e7eb !important;
+            border-radius: 8px !important;
+            padding: 9px 12px !important;
+            font-size: 13px !important;
+            outline: none !important;
+            width: 100%;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            background: #fff !important;
+            color: #111827 !important;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #ff7a1a !important;
+            box-shadow: 0 0 0 3px rgba(255,122,26,0.08) !important;
+        }
+        label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #374151;
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Buttons */
+        .btn-orange, .btn-primary {
+            background: linear-gradient(135deg, #7b3fc4, #5b2a99) !important;
+            color: #fff !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 9px 18px !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.07em !important;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.15s !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-orange:hover, .btn-primary:hover {
+            box-shadow: 0 6px 18px rgba(123,63,196,0.4) !important;
+            transform: translateY(-1px) !important;
+        }
+        .btn-outline {
+            background: #fff !important;
+            color: #374151 !important;
+            border: 1.5px solid #e5e7eb !important;
+            border-radius: 8px !important;
+            padding: 8px 16px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            cursor: pointer;
+            transition: 0.15s !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        .btn-outline:hover {
+            border-color: #7b3fc4 !important;
+            color: #7b3fc4 !important;
+        }
+        .btn-danger {
+            background: #fff !important;
+            color: #ef4444 !important;
+            border: 1.5px solid #fee2e2 !important;
+            border-radius: 8px !important;
+            padding: 8px 16px !important;
+            font-size: 12px !important;
+            font-weight: 700 !important;
+            cursor: pointer;
+            transition: 0.15s !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-danger:hover {
+            background: #ef4444 !important;
+            color: #fff !important;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .badge-green  { background: #dcfce7; color: #16a34a; }
+        .badge-orange { background: #fff7ed; color: #ea580c; }
+        .badge-red    { background: #fee2e2; color: #dc2626; }
+        .badge-blue   { background: #dbeafe; color: #2563eb; }
+        .badge-gray   { background: #f3f4f6; color: #6b7280; }
+
+        /* Stat Cards */
+        .stat-card {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 14px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .stat-label { font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-value { font-size: 22px; font-weight: 900; color: #111827; line-height: 1.2; }
+
+        /* Pagination */
+        .pagination a, .pagination span {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            border: 1.5px solid #e5e7eb;
+            color: #374151;
+            text-decoration: none;
+            transition: 0.15s;
+            padding: 0 10px;
+        }
+        .pagination a:hover { border-color: #7b3fc4; color: #7b3fc4; }
+        .pagination .active span, .pagination [aria-current] {
+            background: #7b3fc4;
+            border-color: #7b3fc4;
+            color: #fff;
+        }
+        
+        /* Prevent layout shifting modern way */
+        html {
+            scrollbar-gutter: stable;
+        }
+
+        /* Force SweetAlert to be on Top Layer */
+        .swal2-container {
+            z-index: 999999 !important;
+        }
+
+        /* Print Specific Styles */
+        @media print {
+            aside, header, nav, .no-print, .actions-bar, button, .pagination, .track-col, .fraud-check-col {
+                display: none !important;
+            }
+            main {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .bg-gray-50 {
+                background: white !important;
+            }
+            .shadow-sm, .shadow-xl {
+                shadow: none !important;
+                border: none !important;
+            }
+            table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+            }
+            th, td {
+                border: 1px solid #ddd !important;
+                padding: 8px !important;
+                font-size: 10px !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            /* Selective Print Fix */
+            body.print-selected-only tbody tr:not(.selected-for-print) {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body class="text-gray-900 font-sans antialiased overflow-x-hidden min-h-screen bg-gray-50 flex flex-col">
     <!-- Top Header Full Width Fix -->
-    <div id="admin-header" class="h-16 text-white flex items-center justify-between px-4 fixed top-0 w-full shadow-sm" style="background-color: #1e1e2d; border-bottom: 1px solid #2b2b3c; z-index: 1000;">
+    <div id="admin-header" class="h-16 text-white flex items-center justify-between px-4 fixed top-0 w-full" style="background-color: #00002a; border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000;">
         <div class="flex items-center">
             <!-- Logo Area -->
             <div class="w-64 flex items-center justify-between shrink-0 pr-4">
                 <a href="{{ route('home') }}" class="flex items-center gap-2 text-white decoration-transparent">
-                    <img src="{{ asset('final logo.jpeg') }}" alt="Logo" class="h-7 w-auto object-contain rounded-sm">
-                    <span class="text-[22px] font-bold tracking-tight leading-none mt-0.5">SmartLookBD</span>
+                    <img src="{{ asset('main-logo.png') }}" alt="Logo" style="height: 40px; width: auto;" class="md:!h-12 object-contain">
+                    <span class="text-[20px] font-bold tracking-tight leading-none mt-0.5">Bazario</span>
                 </a>
-                <button @click="toggle()" class="text-gray-400 hover:text-white transition hidden md:block ml-auto">
+                <button @click="toggleSidebar()" class="text-gray-400 hover:text-white transition hidden md:block ml-auto">
                     <i data-lucide="menu" class="w-5 h-5"></i>
                 </button>
             </div>
             
-            <button @click="toggle()" class="md:hidden text-gray-400 hover:text-white transition mr-4">
+            <button @click="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white transition mr-4">
                 <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
             
@@ -80,9 +367,20 @@
                 <i data-lucide="globe" class="w-3.5 h-3.5"></i> {{ __('Visit Site') }}
             </a>
         </div>
+
+        <!-- Centered Page Title -->
+        <div class="absolute left-1/2 -translate-x-1/2 hidden lg:flex items-center pointer-events-none">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 3px; height: 16px; background: linear-gradient(180deg, #FF6A00, #7b3fc4); border-radius: 4px;"></div>
+                <span style="font-size: 13px; font-weight: 900; color: #ffffff; letter-spacing: 0.15em; text-transform: uppercase;">
+                    @yield('title')
+                </span>
+                <div style="width: 3px; height: 16px; background: linear-gradient(180deg, #7b3fc4, #FF6A00); border-radius: 4px;"></div>
+            </div>
+        </div>
         
         <!-- Right Icons -->
-        <div class="flex items-center gap-4 sm:gap-6">
+        <div class="flex items-center gap-2 sm:gap-6">
             <a href="{{ route('set-locale', app()->getLocale() === 'bn' ? 'en' : 'bn') }}" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-[#ffb822] bg-[#ffb822]/10 px-2.5 py-1 rounded border border-[#ffb822]/20 decoration-transparent">
                 <i data-lucide="languages" class="w-3.5 h-3.5"></i>
                 <span>{{ app()->getLocale() === 'bn' ? 'English' : 'বাংলা' }}</span>
@@ -150,7 +448,7 @@
                                                     if (Notification.permission === 'granted') {
                                                         const n = new Notification('New Order Received!', {
                                                             body: 'Order #' + data.latest_order_id + ' has just arrived.',
-                                                            icon: '{{ asset('final logo.jpeg') }}',
+                                                            icon: '{{ asset('bazario-logo.png') }}',
                                                             tag: 'new-order'
                                                         });
                                                         n.onclick = () => { window.focus(); n.close(); };
@@ -193,8 +491,7 @@
                      x-transition:leave="transition ease-in duration-75"
                      x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                      x-transition:leave-end="opacity-0 translate-y-2 scale-95"
-                     class="absolute right-0 mt-3 bg-white dark:bg-[#1e1e2d] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-gray-700 overflow-hidden z-[1100]" 
-                     style="width: 420px;"
+                     class="fixed sm:absolute left-4 right-4 sm:left-auto sm:right-0 mt-3 bg-white dark:bg-[#1e1e2d] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-gray-100 dark:border-gray-700 overflow-hidden z-[1100] sm:w-[420px]" 
                      x-cloak>
                     
                     <!-- Header -->
@@ -299,7 +596,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 cursor-pointer border-l border-gray-700 pl-4 ml-2">
+            <div class="flex items-center gap-2 cursor-pointer sm:border-l sm:border-gray-700 sm:pl-4 sm:ml-2">
                 <div class="w-8 h-8 rounded-full bg-gray-300 overflow-hidden ring-2 ring-gray-700">
                     <img src="https://ui-avatars.com/api/?name=Admin&background=random" class="w-full h-full object-cover">
                 </div>
@@ -313,11 +610,11 @@
     <div class="flex min-h-screen w-full relative" style="padding-top: 64px;">
         
         <!-- Mobile Sidebar Overlay -->
-        <div x-show="open" x-cloak @click="close()" class="fixed inset-0 bg-black/50 z-[45] md:hidden cursor-pointer" x-transition.opacity></div>
+        <div x-show="sidebarOpen" x-cloak @click="closeSidebar()" class="fixed inset-0 bg-black/50 z-[45] md:hidden cursor-pointer" x-transition.opacity></div>
 
         <!-- Sidebar Fixed -->
-        <aside class="w-64 flex-shrink-0 fixed transition-transform duration-300 flex flex-col md:translate-x-0"
-               :class="open ? 'translate-x-0' : '-translate-x-full'" style="background-color: #1e1e2d; z-index: 999; top: 64px; bottom: 0; height: calc(100vh - 64px);">
+        <aside class="w-64 flex-shrink-0 fixed transition-transform duration-300 flex flex-col -translate-x-full md:translate-x-0"
+               :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" style="background-color: #00002a; z-index: 999; top: 64px; bottom: 0; height: calc(100vh - 64px); border-right: 1px solid rgba(255,255,255,0.05);">
             <nav class="flex-1 overflow-y-auto custom-scrollbar py-4 min-h-0">
                 <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <i data-lucide="monitor" class="sidebar-icon"></i> {{ __('Dashboard') }}
@@ -343,14 +640,14 @@
                         <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300" :class="isCategoriesOpen ? 'rotate-180' : ''"></i>
                     </button>
                     
-                    <div x-show="isCategoriesOpen" {!! request()->routeIs('admin.categories.*') ? '' : 'style="display: none;"' !!} 
+                    <div x-show="isCategoriesOpen" x-cloak
                          x-transition:enter="transition-all ease-in-out duration-300" 
                          x-transition:enter-start="opacity-0 max-h-0" 
                          x-transition:enter-end="opacity-100 max-h-96" 
                          x-transition:leave="transition-all ease-in-out duration-300" 
                          x-transition:leave-start="opacity-100 max-h-96" 
                          x-transition:leave-end="opacity-0 max-h-0" 
-                         class="bg-[#151521] border-l-2 border-gray-700 ml-4 mt-1 rounded-bl-lg pb-1 overflow-hidden">
+                         class="bg-[#070720] border-l-2 border-purple-900/40 ml-4 mt-1 rounded-bl-lg pb-1 overflow-hidden">
                         <a href="{{ route('admin.categories.index') }}" class="block px-6 py-2.5 text-xs font-medium text-gray-400 hover:text-[#ffb822] hover:bg-gray-800 transition-colors {{ request()->routeIs('admin.categories.index') && !request()->has('target_page') ? 'text-[#ffb822] bg-gray-800' : '' }}">
                             <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div> {{ __('All Categories') }}</div>
                         </a>
@@ -380,14 +677,14 @@
                         <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300" :class="isOrdersOpen ? 'rotate-180' : ''"></i>
                     </button>
                     
-                    <div x-show="isOrdersOpen" {!! request()->routeIs('admin.orders.*') ? '' : 'style="display: none;"' !!} 
+                    <div x-show="isOrdersOpen" x-cloak
                          x-transition:enter="transition-all ease-in-out duration-300" 
                          x-transition:enter-start="opacity-0 max-h-0" 
                          x-transition:enter-end="opacity-100 max-h-96" 
                          x-transition:leave="transition-all ease-in-out duration-300" 
                          x-transition:leave-start="opacity-100 max-h-96" 
                          x-transition:leave-end="opacity-0 max-h-0" 
-                         class="bg-[#151521] border-l-2 border-gray-700 ml-4 mt-1 rounded-bl-lg pb-1 overflow-hidden">
+                         class="bg-[#070720] border-l-2 border-purple-900/40 ml-4 mt-1 rounded-bl-lg pb-1 overflow-hidden">
                         <a href="{{ route('admin.orders.index') }}" class="block px-6 py-2.5 text-xs font-medium text-gray-400 hover:text-yellow-500 hover:bg-gray-800 transition-colors {{ request()->routeIs('admin.orders.index') && !request()->has('status') ? 'text-yellow-500 bg-gray-800' : '' }}">
                             <div class="flex items-center gap-2"><div class="w-1.5 h-1.5 rounded-full bg-gray-400"></div> {{ __('All Orders') }}</div>
                         </a>
@@ -425,8 +722,39 @@
                 </a>
 
                 <a href="{{ route('admin.sales.index') }}" class="sidebar-link {{ request()->routeIs('admin.sales.*') ? 'active' : '' }}">
-                    <i data-lucide="trending-up" class="sidebar-icon"></i> {{ __('Sales Report') }}
+                    <i data-lucide="pie-chart" class="sidebar-icon"></i> {{ __('Sales Report') }}
                 </a>
+
+                <div x-data="{ isAdsOpen: {{ request()->routeIs('admin.ads-analytics.*') ? 'true' : 'false' }} }">
+                    <button @click="isAdsOpen = !isAdsOpen" class="w-full flex items-center justify-between sidebar-link {{ request()->routeIs('admin.ads-analytics.*') ? 'active' : '' }} border-none cursor-pointer focus:outline-none">
+                        <div class="flex items-center gap-[0.75rem]">
+                            <i data-lucide="trending-up" class="sidebar-icon"></i> <span class="font-medium text-[0.85rem]">{{ __('Live Ads Result') }}</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300" :class="isAdsOpen ? 'rotate-180' : ''"></i>
+                    </button>
+                    
+                    <div x-show="isAdsOpen" {!! request()->routeIs('admin.ads-analytics.*') ? '' : 'style="display: none;"' !!} 
+                         x-transition:enter="transition-all ease-in-out duration-300" 
+                         x-transition:enter-start="opacity-0 max-h-0" 
+                         x-transition:enter-end="opacity-100 max-h-96" 
+                         x-transition:leave="transition-all ease-in-out duration-300" 
+                         x-transition:leave-start="opacity-100 max-h-96" 
+                         x-transition:leave-end="opacity-0 max-h-0" 
+                         class="bg-[#070720] border-l-2 border-purple-900/40 ml-4 mt-1 rounded-bl-lg pb-1 overflow-hidden">
+                        <a href="{{ route('admin.ads-analytics.index') }}" class="block px-6 py-2.5 text-xs font-medium text-gray-400 hover:text-[#ffb822] hover:bg-gray-800 transition-colors {{ request()->routeIs('admin.ads-analytics.index') && request('platform') == null ? 'text-[#ffb822] bg-gray-800' : '' }}">
+                            <div class="flex items-center gap-2"><i data-lucide="layout" class="w-3.5 h-3.5"></i> {{ __('Overview') }}</div>
+                        </a>
+                        <a href="{{ route('admin.ads-analytics.index', ['platform' => 'facebook']) }}" class="block px-6 py-2.5 text-xs font-medium text-gray-400 hover:text-blue-400 hover:bg-gray-800 transition-colors {{ request('platform') === 'facebook' ? 'text-blue-400 bg-gray-800' : '' }}">
+                            <div class="flex items-center gap-2"><i data-lucide="facebook" class="w-3.5 h-3.5"></i> {{ __('Facebook Ads') }}</div>
+                        </a>
+                        <a href="{{ route('admin.ads-analytics.index', ['platform' => 'google']) }}" class="block px-6 py-2.5 text-xs font-medium text-gray-400 hover:text-yellow-500 hover:bg-gray-800 transition-colors {{ request('platform') === 'google' ? 'text-yellow-500 bg-gray-800' : '' }}">
+                            <div class="flex items-center gap-2"><i data-lucide="globe" class="w-3.5 h-3.5"></i> {{ __('Google Ads') }}</div>
+                        </a>
+                        <a href="{{ route('admin.ads-analytics.index', ['platform' => 'tiktok']) }}" class="block px-6 py-2.5 text-xs font-medium text-gray-400 hover:text-pink-400 hover:bg-gray-800 transition-colors {{ request('platform') === 'tiktok' ? 'text-pink-400 bg-gray-800' : '' }}">
+                            <div class="flex items-center gap-2"><i data-lucide="video" class="w-3.5 h-3.5"></i> {{ __('TikTok Ads') }}</div>
+                        </a>
+                    </div>
+                </div>
 
                 <a href="{{ route('admin.banners.index') }}" class="sidebar-link {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
                     <i data-lucide="image" class="sidebar-icon"></i> {{ __('Hero Banners') }}
@@ -466,6 +794,9 @@
                 <a href="{{ route('admin.tiktok-pixel.index') }}" class="sidebar-link {{ request()->routeIs('admin.tiktok-pixel.*') ? 'active' : '' }}">
                     <i data-lucide="video" class="sidebar-icon"></i> {{ __('TikTok Pixel') }}
                 </a>
+                <a href="{{ route('admin.google-ads.index') }}" class="sidebar-link {{ request()->routeIs('admin.google-ads.*') ? 'active' : '' }}">
+                    <i data-lucide="globe" class="sidebar-icon"></i> {{ __('Google Ads Setup') }}
+                </a>
                 <a href="{{ route('admin.popup.index') }}" class="sidebar-link {{ request()->routeIs('admin.popup.*') ? 'active' : '' }}">
                     <i data-lucide="image" class="sidebar-icon"></i> {{ __('Show Pop Up') }}
                 </a>
@@ -498,7 +829,7 @@
                     <i data-lucide="help-circle" class="sidebar-icon"></i> {{ __('Instruction Guide') }}
                 </a>
             </nav>
-            <div class="p-4 border-t border-[#1b1b28]">
+            <div class="p-4 border-t border-white/5">
                 <form action="{{ session('admin_authenticated') ? route('admin.logout') : route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="flex items-center gap-3 px-4 py-2.5 w-full rounded-md text-sm font-semibold text-red-400 bg-red-500/10 hover:text-white hover:bg-red-500 transition-colors duration-200">
@@ -509,52 +840,14 @@
         </aside>
 
         <!-- Main Content offset by sidebar desktop-ml-256 -->
-        <main class="flex-1 desktop-ml-256 desktop-w-calc p-4 sm:p-6 lg:p-8 w-full" style="background-color: #f5f5f6;">
-            @if(session('success'))
-            <div id="admin-success-alert" class="bg-green-50 text-green-700 p-4 rounded-lg text-sm flex items-center gap-2 mb-6 border border-green-100 transition-opacity duration-500">
-                <i data-lucide="check-circle" class="w-4 h-4"></i> {{ session('success') }}
-            </div>
-            <script>
-                setTimeout(function() {
-                    const alert = document.getElementById('admin-success-alert');
-                    if (alert) {
-                        alert.style.opacity = '0';
-                        setTimeout(() => alert.remove(), 500);
-                    }
-                }, 3000);
-            </script>
-            @endif
-            @if(session('error'))
-            <div id="admin-error-alert" class="bg-red-50 text-red-700 p-4 rounded-lg text-sm flex items-center gap-2 mb-6 border border-red-100 transition-opacity duration-500">
-                <i data-lucide="alert-circle" class="w-4 h-4"></i> {{ session('error') }}
-            </div>
-            <script>
-                setTimeout(function() {
-                    const alert = document.getElementById('admin-error-alert');
-                    if (alert) {
-                        alert.style.opacity = '0';
-                        setTimeout(() => alert.remove(), 500);
-                    }
-                }, 3000);
-            </script>
-            @endif
-            @if($errors->any())
-            <div class="bg-red-50 text-red-700 p-4 rounded-lg text-sm mb-6 border border-red-100">
-                <ul class="list-disc list-inside">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-
+        <main class="flex-1 desktop-ml-256 desktop-w-calc px-4 pt-1 pb-4 sm:px-6 sm:pt-2 sm:pb-6 lg:px-8 lg:pt-2 lg:pb-8 w-full" style="background-color: #f5f6f8;">
             @yield('content')
         </main>
     </div>
 
     <!-- Global Image Modal -->
     <div x-data x-show="$store.imageModal.show" 
-         class="fixed inset-0 flex items-center justify-center p-4"
+         class="fixed inset-0 flex items-center justify-center p-4 sm:p-6"
          style="background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 9999999;"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
@@ -565,39 +858,74 @@
          @click="$store.imageModal.close()"
          @keydown.escape.window="$store.imageModal.close()"
          x-cloak>
-        <div class="relative max-w-5xl w-full h-full flex items-center justify-center" @click.stop>
+        <div class="relative max-w-2xl w-full h-full flex items-center justify-center p-2" @click.stop>
             <button @click="$store.imageModal.close()" class="absolute top-0 right-0 m-4 text-white hover:text-gray-300 transition-colors z-10">
                 <i data-lucide="x" class="w-8 h-8"></i>
             </button>
-            <img :src="$store.imageModal.url" class="max-w-full max-h-full object-contain shadow-2xl rounded-lg" alt="Enlarged product image">
+            <img :src="$store.imageModal.url" class="max-w-full max-h-[90vh] object-contain shadow-2xl rounded-2xl" alt="Enlarged product image">
         </div>
     </div>
 
     @stack('scripts')
+    <style>
+        @keyframes slideDownPremium {
+            0% { opacity: 0; transform: translateY(-100px) scale(0.9); filter: blur(10px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes slideUpPremium {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(0.9); filter: blur(10px); }
+        }
+        .swal2-show { 
+            animation: slideDownPremium 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important; 
+        }
+        .swal2-hide { 
+            animation: slideUpPremium 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important; 
+        }
+    </style>
     <script>
+        // Define Toast first so it's available everywhere
+        window.Toast = Swal.mixin({
+            toast: false,
+            position: 'center',
+            showConfirmButton: true,
+            confirmButtonColor: '#7b3fc4',
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.style.zIndex = '999999';
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
         lucide.createIcons();
 
         // Sidebar Scroll Persistence
         const sidebarNav = document.querySelector('aside nav');
         if (sidebarNav) {
-            // Restore scroll position
             const scrollPos = localStorage.getItem('admin_sidebar_scroll');
-            if (scrollPos) {
-                sidebarNav.scrollTop = scrollPos;
-            }
-
-            // Save scroll position on link click
+            if (scrollPos) sidebarNav.scrollTop = scrollPos;
             sidebarNav.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', () => {
                     localStorage.setItem('admin_sidebar_scroll', sidebarNav.scrollTop);
                 });
             });
-            
-            // Also save on manual scroll (optional but safer)
             sidebarNav.addEventListener('scroll', () => {
                 localStorage.setItem('admin_sidebar_scroll', sidebarNav.scrollTop);
             });
         }
+    </script>
+    <script>
+        @if(session('success'))
+            window.Toast.fire({ icon: 'success', title: '{{ session('success') }}' });
+        @endif
+        @if(session('error'))
+            window.Toast.fire({ icon: 'error', title: '{{ session('error') }}' });
+        @endif
+        @if($errors->any())
+            window.Toast.fire({ icon: 'error', title: 'Validation Error', html: '{!! implode("<br>", $errors->all()) !!}' });
+        @endif
     </script>
 </body>
 </html>

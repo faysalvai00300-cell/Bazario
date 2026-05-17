@@ -39,8 +39,9 @@ class HomeController extends Controller
         $featuredProducts = Product::active()->featured()->latest()->with(['category', 'images'])->take(50)->get();
         $megaDeals = Product::active()->where('is_mega_deal', true)->latest()->with(['category', 'images'])->take(6)->get();
         $newArrivals = Product::active()->where('is_new', true)->latest()->with(['category', 'images'])->take(18)->get();
+        $topSells = Product::active()->where('is_top_sell', true)->latest()->with(['category', 'images'])->take(12)->get();
         $reviews = Review::where('is_approved', true)->with('product')->latest()->take(6)->get();
 
-        return view('home', compact('heroBanners', 'promoBanners', 'banners', 'categories', 'flashSales', 'featuredProducts', 'megaDeals', 'newArrivals', 'reviews', 'page1Cats', 'page2Cats', 'page3Cats', 'page4Cats', 'page5Cats'));
+        return view('home', compact('heroBanners', 'promoBanners', 'banners', 'categories', 'flashSales', 'featuredProducts', 'megaDeals', 'newArrivals', 'topSells', 'reviews', 'page1Cats', 'page2Cats', 'page3Cats', 'page4Cats', 'page5Cats'));
     }
 }

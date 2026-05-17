@@ -21,21 +21,21 @@
 
             <div>
                 <label class="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Global Meta Title</label>
-                <input type="text" name="seo_meta_title" value="{{ old('seo_meta_title', $settings->seo_meta_title ?? '') }}" placeholder="e.g. SmartLookBD - Premium Online Shopping in Bangladesh"
+                <input type="text" name="seo_meta_title" value="{{ old('seo_meta_title', $settings->seo_meta_title ?? '') }}" placeholder="e.g. Bazario - Premium Online Shopping in Bangladesh"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
                 <p class="text-xs text-gray-400 mt-1 dark:text-gray-500">The title shown in search engine results globally.</p>
             </div>
 
             <div>
                 <label class="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Global Meta Keywords</label>
-                <input type="text" name="seo_meta_keywords" value="{{ old('seo_meta_keywords', $settings->seo_meta_keywords ?? '') }}" placeholder="e.g. online shopping, electronics, fashion, SmartLookBD"
+                <input type="text" name="seo_meta_keywords" value="{{ old('seo_meta_keywords', $settings->seo_meta_keywords ?? '') }}" placeholder="e.g. online shopping, electronics, fashion, Bazario"
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">
                 <p class="text-xs text-gray-400 mt-1 dark:text-gray-500">Comma-separated keywords defining your entire store.</p>
             </div>
 
             <div>
                 <label class="text-sm font-medium text-gray-700 mb-2 block dark:text-gray-300">Global Meta Description</label>
-                <textarea name="seo_meta_description" rows="3" placeholder="e.g. Shop the best products at SmartLookBD. Electronics, Fashion, Home & Living and more with amazing deals."
+                <textarea name="seo_meta_description" rows="3" placeholder="e.g. Shop the best products at Bazario. Electronics, Fashion, Home & Living and more with amazing deals."
                     class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 focus:outline-none resize-none dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-orange-500/50">{{ old('seo_meta_description', $settings->seo_meta_description ?? '') }}</textarea>
                 <p class="text-xs text-gray-400 mt-1 dark:text-gray-500">A short description of your online store for search engines (150-160 characters recommended).</p>
             </div>

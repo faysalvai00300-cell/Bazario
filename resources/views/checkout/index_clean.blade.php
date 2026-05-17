@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'চেকআউট - SmartLookBD')
+@section('title', 'চেকআউট - Bazario')
 @section('content')
 <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
     <p class="text-center text-sm text-gray-500 mb-4">অর্ডার করতে আপনার তথ্য দিন</p>
